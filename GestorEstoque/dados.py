@@ -4,7 +4,6 @@
 global dadosProduto
 dadosProduto = {
     'ID_PRODUTO':[],
-    'COD_PRODUTO':[],
     'NOME_PRODUTO':[],
     'QUANTIDADE_PRODUTO':[]    
 } 
