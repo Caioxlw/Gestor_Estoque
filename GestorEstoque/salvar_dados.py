@@ -1,7 +1,7 @@
 from dados import dadosProduto
 
 def obterProdutosCsv():
-    with open("banco_de_dados/produtos.csv", "r") as arquivo:
+    with open("GestorEstoque/banco_de_dados/produtos.csv", "r") as arquivo:
         
         linha = arquivo.readline()
         while linha: 
@@ -24,3 +24,4 @@ def obterClientesCsv():
 
 def SalvarClienteCsv():
     pass
+obterProdutosCsv()
