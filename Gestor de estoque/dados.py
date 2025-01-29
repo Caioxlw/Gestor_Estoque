@@ -3,7 +3,8 @@ dadosProduto = {
     'ID_PRODUTO':[],
     'NOME_PRODUTO':[],
     'PRECO_PRODUTO':[],
-    'QUANTIDADE_PRODUTO':[]    
+    'QUANTIDADE_PRODUTO':[],
+    'FORNECEDOR_PRODUTO':[]
 } 
    
 global dadosCliente
@@ -24,4 +25,3 @@ dadosVendas = {
     'NOME_VENDA':[],
     'VALOR_VENDA':[]
 }
-
