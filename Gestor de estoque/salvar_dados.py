@@ -1,30 +1,58 @@
 from dados import *
 
-def obterProdutosCsv():
-    with open("banco_de_dados/produtos.csv", "r") as arquivo:
+def obterCsv(opcao):
+    if opcao == 'Produtos':
+        with open("banco_de_dados/produtos.csv", "r") as arquivo:
+            
+            linha = arquivo.readline()
+            while linha: 
+                dado = linha.strip()   #-> strip retorna -> 'ID_PRODUTO,NOME_PRODUTO,'PRECO_PRODUTO',QUNATIDADE_PRODUTO'
+                dado = dado.split(',') #-> split retorna -> ['ID_PRODUTO', 'NOME_PRODUTO', 'PRECO_PRODUTO', 'QUNATIDADE_PRODUTO']
+                dado[0] = int(dado[0])
+                dado[2] = float(dado[2])
+                dado[3] = int(dado[3]) #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                dadosProduto['ID_PRODUTO'].append(dado[0]) 
+                dadosProduto['NOME_PRODUTO'].append(dado[1])
+                dadosProduto['PRECO_PRODUTO'].append(dado[2])
+                dadosProduto['QUANTIDADE_PRODUTO'].append(dado[3]) #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                dadosProduto['FORNECEDOR_PRODUTO'].append(dado[4])
+
+                linha = arquivo.readline()  
+        arquivo.close()
+    
+    elif opcao == 'Clientes':
+        pass
+
+    elif opcao == 'Fornecedores':
+        with open('./banco_de_dados/fornecedores.csv','r') as arquivo:
+            
+            linha = arquivo.readline()
+            while linha:
+                dado = linha.strip()   #-> strip retorna -> 'ID_PRODUTO,NOME_PRODUTO,'PRECO_PRODUTO',QUNATIDADE_PRODUTO'
+                dado = dado.split(',') #-> split retorna -> ['ID_PRODUTO', 'NOME_PRODUTO', 'PRECO_PRODUTO', 'QUNATIDADE_PRODUTO']
+                dado[0] = int(dado[0])
+
+                dadosFornecedor['ID_FORNECEDOR'].append(dado[0]) 
+                dadosFornecedor['NOME_FORNECEDOR'].append(dado[1])
+                linha = arquivo.readline()  
+        arquivo.close()
+    
+def salvarCsv(opcao:str):
+    
+    if opcao == 'Produto':
+        with open('banco_de_dados/produtos.csv','w') as arquivo:
+            for i in range(len(dadosProduto['ID_PRODUTO'])):
+                arquivo.write(f'{dadosProduto["ID_PRODUTO"][i]},{dadosProduto["NOME_PRODUTO"][i]},{dadosProduto["PRECO_PRODUTO"][i]},{dadosProduto["QUANTIDADE_PRODUTO"][i]},{dadosProduto["FORNECEDOR_PRODUTO"][i]}\n')
+        arquivo.close()
         
-        linha = arquivo.readline()
-        while linha: 
-            dado = linha.strip()   #-> strip retorna -> 'ID_PRODUTO,NOME_PRODUTO,'PRECO_PRODUTO',QUNATIDADE_PRODUTO'
-            dado = dado.split(',') #-> split retorna -> ['ID_PRODUTO', 'NOME_PRODUTO', 'PRECO_PRODUTO', 'QUNATIDADE_PRODUTO']
-            dado[0] = int(dado[0])
-            dado[2] = float(dado[2])
-            dado[3] = int(dado[3]) #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-            dadosProduto['ID_PRODUTO'].append(dado[0]) 
-            dadosProduto['NOME_PRODUTO'].append(dado[1])
-            dadosProduto['PRECO_PRODUTO'].append(dado[2])
-            dadosProduto['QUANTIDADE_PRODUTO'].append(dado[3]) #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-            linha = arquivo.readline()  
-    arquivo.close()
-
-def salvarProdutosCsv():
-    with open('banco_de_dados/produtos.csv','w') as arquivo:
-        for i in range(len(dadosProduto['ID_PRODUTO'])):
-            arquivo.write(f'{dadosProduto['ID_PRODUTO'][i]},{dadosProduto['NOME_PRODUTO'][i]},{dadosProduto['PRECO_PRODUTO'][i]},{dadosProduto['QUANTIDADE_PRODUTO'][i]}\n')
-    arquivo.close()
-  
-def obterClientesCsv():
-    pass
-
-def SalvarClienteCsv():
-    pass
+    elif opcao == 'Cliente':
+        with open('banco_de_dados/clientes.csv','w') as arquivo:
+            for i in range(len(dadosCliente['ID_CLIENTE'])):
+                arquivo.write(f'{dadosCliente["ID_CLIENTE"][i]},{dadosCliente["NOME_PRODUTO"][i]}\n')
+        arquivo.close()
+        
+    elif opcao == 'Fornecedor':
+        with open('banco_de_dados/fornecedores.csv','w') as arquivo:
+            for i in range(len(dadosFornecedor['ID_FORNECEDOR'])):
+                arquivo.write(f'{dadosFornecedor["ID_FORNECEDOR"][i]},{dadosFornecedor["NOME_FORNECEDOR"][i]}\n')
+        arquivo.close()
