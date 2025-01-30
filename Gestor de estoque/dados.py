@@ -4,7 +4,8 @@ dadosProduto = {
     'NOME_PRODUTO':[],
     'PRECO_PRODUTO':[],
     'QUANTIDADE_PRODUTO':[],
-    'FORNECEDOR_PRODUTO':[]
+    'FORNECEDOR_PRODUTO':[],
+    'CATEGORIA_PRODUTO':[]
 } 
    
 global dadosCliente

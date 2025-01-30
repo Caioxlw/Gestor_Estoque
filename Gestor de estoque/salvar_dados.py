@@ -10,12 +10,13 @@ def obterCsv(opcao):
                 dado = dado.split(',') 
                 dado[0] = int(dado[0])
                 dado[2] = float(dado[2])
-                dado[3] = int(dado[3]) #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                dado[3] = int(dado[3]) 
                 dadosProduto['ID_PRODUTO'].append(dado[0]) 
                 dadosProduto['NOME_PRODUTO'].append(dado[1])
                 dadosProduto['PRECO_PRODUTO'].append(dado[2])
-                dadosProduto['QUANTIDADE_PRODUTO'].append(dado[3]) #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                dadosProduto['QUANTIDADE_PRODUTO'].append(dado[3])
                 dadosProduto['FORNECEDOR_PRODUTO'].append(dado[4])
+                dadosProduto['CATEGORIA_PRODUTO'].append(dado[5])
 
                 linha = arquivo.readline()  
         arquivo.close()
@@ -52,7 +53,7 @@ def salvarCsv(opcao:str):
     if opcao == 'Produto':
         with open('banco_de_dados/produtos.csv','w') as arquivo:
             for i in range(len(dadosProduto['ID_PRODUTO'])):
-                arquivo.write(f'{dadosProduto["ID_PRODUTO"][i]},{dadosProduto["NOME_PRODUTO"][i]},{dadosProduto["PRECO_PRODUTO"][i]},{dadosProduto["QUANTIDADE_PRODUTO"][i]},{dadosProduto["FORNECEDOR_PRODUTO"][i]}\n')
+                arquivo.write(f'{dadosProduto["ID_PRODUTO"][i]},{dadosProduto["NOME_PRODUTO"][i]},{dadosProduto["PRECO_PRODUTO"][i]},{dadosProduto["QUANTIDADE_PRODUTO"][i]},{dadosProduto["FORNECEDOR_PRODUTO"][i]},{dadosProduto['CATEGORIA_PRODUTO'[i]]}\n')
         arquivo.close()
         
     elif opcao == 'Cliente':

@@ -22,28 +22,23 @@ def menuPrincipal():
     0.SALVAR E SAIR
                              
 R:'''))
-            if menu > 4 or menu < 0:
-                os.system('cls')
-                print('OPÇÃO INVÁLIDA!!')
-                sleep(0.5)
-                continue
             match menu:
                 case 1:
                     print('\nIndo para o menu de produtos...')
                     sleep(0.5)
-                    menuProdutos()
+                    return menuProdutos()
                 case 2:
                     print('\nIndo para o menu de clientes...')
                     sleep(0.5)
-                    menuClientes()
+                    return menuClientes()
                 case 3:
-                    print('\nMenu de fornecedores ainda nao existe...')
+                    print('\nIndo para o menu de fornecedores...')
                     sleep(0.5)
-                    menuFornecedores() #pra fazer ainda
+                    return menuFornecedores() #pra fazer ainda
                 case 4:
-                    print('\nMenu de vendas ainda nao existe...')
+                    print('\nIndo para o menu de vendas...')
                     sleep(0.5)
-                    menuVendas() #pra fazer ainda
+                    return menuVendas() #pra fazer ainda
 
                 case 0:
                     print('\nSalvando e saindo...')
@@ -80,37 +75,32 @@ def menuProdutos():
     0.VOLTAR
 
 R:'''))
-            if menu > 5 or menu < 0:
-                os.system('cls')
-                print('OPÇÃO INVÁLIDA!!')
-                sleep(0.5)
-                continue
 
             match menu:
                 case 1:
                     
-                    cadastrarProduto()
+                    return cadastrarProduto()
                 case 2:
                     
-                    editarItem()
+                    return editarItem()
                 case 3:
                     
-                    excluirItem() 
+                    return excluirItem() 
                 case 4:
-                    entradaItem()
+                    return entradaItem()
                 case 5:
                     print(mostrarEstoque())
                     input('\nPressione enter para sair')
                     
-                    menuProdutos()
+                    return menuProdutos()
                 case 0:
                     
-                    menuPrincipal()
+                    return menuPrincipal()
                 case _:
                     print("OPÇÃO INVÁLIDA!")   
                     sleep(0.5)
                     
-                    menuProdutos() 
+                    return menuProdutos() 
 
         except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
             os.system('cls')
@@ -202,6 +192,7 @@ def cadastrarProduto():
         dadosProduto['NOME_PRODUTO'].append(nomeProduto)                
         dadosProduto['PRECO_PRODUTO'].append(precoProduto)      
         dadosProduto['QUANTIDADE_PRODUTO'].append(0)
+        dadosProduto['CATEGORIA_PRODUTO'].append('ImplementacaoDeCategoriaEmBreve')
 
         for linha in dadosFornecedor['ID_FORNECEDOR']:
             if dadosFornecedor['ID_FORNECEDOR'][linha] == fornecedor:
@@ -267,7 +258,6 @@ R:'''))
             sleep(0.5)
             return menuProdutos()    
                         
-
 def excluirItem():
     while True:
 
@@ -291,6 +281,8 @@ def excluirItem():
             dadosProduto['NOME_PRODUTO'].pop(i)
             dadosProduto['QUANTIDADE_PRODUTO'].pop(i)
             dadosProduto['PRECO_PRODUTO'].pop(i)
+            dadosProduto['FORNECEDOR_PRODUTO'].pop(i)
+            dadosProduto['CATEGORIA_PRODUTO'].pop(i)
             print('Item removido com sucesso!')    
             sleep(1)
             break
@@ -311,14 +303,16 @@ def mostrarEstoque(): #defino o parametro igual a zero para ele ser opcional, po
     preco = dadosProduto['PRECO_PRODUTO']
     qtd = dadosProduto['QUANTIDADE_PRODUTO']
     forn = dadosProduto['FORNECEDOR_PRODUTO']
+    categ = dadosProduto['CATEGORIA_PRODUTO']
     
     estoque_string = ''
     maiorID = len(str(max( id )))
     maiorNOME = len(max( nome ,key=len))
     maiorPRECO = len(str(max( preco )))
     maiorQTD = len(str(max( qtd )))
+    maiorFORN = len(max(forn, key=len))
 
-    estoque_string += (f'ID{" "*(maiorID-2)} │ NOME{" "*(maiorNOME-4)} │ PRECO{" "*(maiorPRECO-5)} │ QUANTIDADE{" "*(maiorQTD-10)} │ FORNECEDOR\n')
+    estoque_string += (f'ID{" "*(maiorID-2)} │ NOME{" "*(maiorNOME-4)} │ PRECO{" "*(maiorPRECO-5)} │ QUANTIDADE{" "*(maiorQTD-10)} │ FORNECEDOR{" "*(maiorFORN-10)} │ CATEGORIA\n')
     # estoque_string += (f'') #fazer uma listrinha para separar do cabecalho
 
     for i in range(len(dadosProduto['ID_PRODUTO'])):
@@ -327,11 +321,11 @@ def mostrarEstoque(): #defino o parametro igual a zero para ele ser opcional, po
         maiorNOME  = len(max( nome ,key=len)) - len( nome[i] )
         maiorPRECO = len(str(max( preco )))   - len(str( preco[i] ))
         maiorQTD   = len(str(max( qtd )))     - len(str( qtd[i] ))
-        
-        estoque_string += (f'{id[i]}{" "*(maiorID)} │ {nome[i]}{" "*(maiorNOME)} │ {preco[i]}{" "*(maiorPRECO)} │ {qtd[i]}{" "*(10-len(str( qtd[i] )))} │ {forn[i]}\n')
+        maiorFORN  = len(max( forn , key=len)) - len( forn[i] )
+
+        estoque_string += (f'{id[i]}{" "*(maiorID)} │ {nome[i]}{" "*(maiorNOME)} │ {preco[i]}{" "*(maiorPRECO)} │ {qtd[i]}{" "*(10-maiorQTD)} │ {forn[i]}{" "*(10-maiorFORN)} │ {categ[i]}\n')
     return estoque_string
 
-    
 #------/MENU PRODUTOS------ 
 
 #------MENU FORNECEDORES------ 
@@ -348,11 +342,6 @@ def menuFornecedores():
     0.VOLTAR
                                 
 R:'''))
-            if menu > 3 or menu < 0:
-                os.system('cls')
-                print('OPÇÃO INVÁLIDA!!')
-                sleep(0.5)
-                continue
 
             match menu:
                 case 1:
@@ -426,7 +415,6 @@ def editarFornecedor():
     sleep(0.5)
     return menuFornecedores()
 
-
 def listarFornecedores():
     os.system('cls')
     if not dadosFornecedor["ID_FORNECEDOR"]:
@@ -452,7 +440,53 @@ def listarFornecedores():
 
 #------MENU VENDAS------ 
 def menuVendas():
-    pass
+
+    while True:
+        os.system('cls')
+
+     
+        try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
+            menu = int(input('''
+    ---MENU DE PRODUTOS---
+    1.EM BREVE
+    2.EM BREVE
+    3.EM BREVE
+    
+    0.VOLTAR
+
+R:'''))
+
+            match menu:
+                case 1:
+                    return soon()
+
+                case 2:
+                    return soon()
+
+                case 3:
+                    return soon()
+
+                case 0:
+                    
+                    return menuPrincipal()
+                case _:
+                    print("OPÇÃO INVÁLIDA!")   
+                    sleep(0.5)
+                    continue
+
+        except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
+            os.system('cls')
+            print('APENAS NÚMEROS!!')
+            sleep(0.5)   
+
+def soon():
+    os.system('cls')
+    print('IMPLEMENTAÇAÕ EM BREVE')
+    sleep(1.5)
+    os.system('cls')
+    print('VOLTANDO PARA MENU PRINCIPAL...')
+    sleep(1.5)
+    return menuPrincipal() 
 #------/MENU VENDAS------ 
 
 #------MENU CLIENTES------ 
@@ -470,12 +504,7 @@ def menuClientes():
     0. VOLTAR
 
 R:'''))
-            if menu > 3 or menu < 0:
-                os.system('cls')
-                print('OPÇÃO INVÁLIDA!!')
-                sleep(0.5)
-                continue
-
+            
             match menu:
                 case 1:
                     return cadastrarCliente()
@@ -536,7 +565,6 @@ def listarClientes(): #defino o parametro igual a zero para ele ser opcional, po
         maiorID    = len(str(max( id ))) - len(str( id[i] ))
         cliente_string += (f'{id[i]}{" "*(maiorID)} │ {nome[i]}\n')
     return cliente_string
-
 
 def editarCliente():
     if not dadosCliente['ID_CLIENTE']: #python trata vazios como falso
