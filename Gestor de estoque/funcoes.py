@@ -150,8 +150,9 @@ def entradaItem():
             print('Apenas numeros!!')
     
     dadosProduto['QUANTIDADE_PRODUTO'][idProduto] += quantidadeItem
-
     salvarCsv('Produto')
+    print('Item adicionado com sucesso!!!')
+    sleep(0.5)
     menuProdutos()
 
 def cadastrarProduto():
@@ -298,6 +299,7 @@ def excluirItem():
     return menuProdutos()
 
 def mostrarEstoque(): #defino o parametro igual a zero para ele ser opcional, por que se o usuario nao digitar nada ele esta pre setado com um valor
+
     os.system('cls')
     if not dadosProduto['ID_PRODUTO']:
         print('ESTOQUE VAZIO!!')
@@ -387,6 +389,7 @@ def cadastrarFornecedor(parametro = "CadastroFornecedor"): #parametro fica opcio
 
     dadosFornecedor['ID_FORNECEDOR'].append(len(dadosFornecedor["ID_FORNECEDOR"]))    
     dadosFornecedor['NOME_FORNECEDOR'].append(nome)                                    
+    dadosProduto['FORNECEDOR_PRODUTO'].append(nome)                                    
 
     os.system('cls')
     
