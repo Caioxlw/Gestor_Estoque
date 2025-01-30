@@ -178,33 +178,49 @@ def cadastrarProduto():
                 sleep(0.5)
 
         while True:
-            
             try:
                 print(listarFornecedores())
-                fornecedor = int(input(f'{nomeProduto} é vinculado a qual fornecedor? [ID]\nEnter para cadastrar agora\n'))
-                break
+                fornecedor = (input(f'{nomeProduto} é vinculado a qual fornecedor? [ID]\nEnter para cadastrar agora\n'))
+                if not fornecedor:
+                    cadastrarFornecedor('CadastroProduto')
+                    break
+                else:
+                    
+                    fornecedor = int(fornecedor)
+                    if fornecedor not in dadosFornecedor["ID_FORNECEDOR"]:
+                        print(f"Fornecedor ID:{fornecedor} não encontrado")
+                    else:
+                        break
+            
             except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
+
                 print('Apenas números!!')
                 sleep(0.5)
 
-        dadosProduto['ID_PRODUTO'].append(f'{len(dadosProduto["ID_PRODUTO"])}')           #--------------
-        dadosProduto['NOME_PRODUTO'].append(nomeProduto)                   #fazer uma funcao para adicionar item ao estoque
-        dadosProduto['PRECO_PRODUTO'].append(precoProduto)       #--------------
+        dadosProduto['ID_PRODUTO'].append(len(dadosProduto["ID_PRODUTO"]))         
+        dadosProduto['NOME_PRODUTO'].append(nomeProduto)                
+        dadosProduto['PRECO_PRODUTO'].append(precoProduto)      
         dadosProduto['QUANTIDADE_PRODUTO'].append(0)
-        dadosProduto['FORNECEDOR_PRODUTO'].append(dadosFornecedor['NOME_FORNECEDOR'][fornecedor])
+
+        for linha in dadosFornecedor['ID_FORNECEDOR']:
+            if dadosFornecedor['ID_FORNECEDOR'][linha] == fornecedor:
+                dadosProduto['FORNECEDOR_PRODUTO'].append(dadosFornecedor['NOME_FORNECEDOR'][linha])
+                break
+            
         os.system('cls')
         salvarCsv('Produtos')
         print('Item cadastrado!!')
 
-        sleep(0.5)
+        sleep(1)
         menuProdutos()
         
 def editarItem():
     if not dadosProduto['ID_PRODUTO']: #python trata vazios como falso
         os.system('cls')
         print('Estoque vazio!!')
-        
-        menuProdutos()
+        sleep(0.5)
+        return menuProdutos()
+
     while True:
         os.system('cls')
         print(mostrarEstoque())
@@ -229,38 +245,26 @@ def editarItem():
 R:'''))
     match opcao:
         case 1:
-            while True:
-                nomeEditado = str(input(f'Renomear [{dadosProduto["NOME_PRODUTO"][idProduto]}] para: ').upper())
-
-                if nomeEditado == dadosProduto['NOME_PRODUTO'][idProduto]:
-                    print('NOVO NOME NÃO PODE SER IGUAL AO ANTERIOR!!')
-                    
-                elif nomeEditado in dadosProduto['NOME_PRODUTO']:
-                    print('ESSE NOME JA EXISTE!!')
-
-                else:    
-                    dadosProduto['NOME_PRODUTO'][idProduto] = nomeEditado
-                    print('NOME EDITADO COM SUCESSO!!')
-        
-        
+            for idDoProduto in dadosProduto["ID_PRODUTO"]:
+                if dadosProduto["ID_PRODUTO"][idDoProduto] == idProduto:
+                    nomeEditado = str(input(f'Renomear [{dadosProduto["NOME_PRODUTO"][idProduto]}] para: ').upper())
                     break
+            dadosProduto['NOME_PRODUTO'][idProduto] = nomeEditado
+            print('NOME EDITADO COM SUCESSO!!')
             salvarCsv('Produto')
-            menuProdutos()
+            sleep(0.5)
+            return menuProdutos()
 
         case 2:
-            while True:
-                precoEditado = float(input(f'Trocar preço atual ({dadosProduto["PRECO_PRODUTO"][idProduto]}) para: ')) 
-
-                if precoEditado == dadosProduto["PRECO_PRODUTO"][idProduto]:    
-                    print('NOVO NOME NÃO PODE SER IGUAL AO ANTERIOR!!')
-                else:
-                    dadosProduto["PRECO_PRODUTO"][idProduto] = precoEditado
-                    print("PREÇO EDITADO COM SUCESSO!!!")
-
-                
+            for idDoProduto in dadosProduto["ID_PRODUTO"]:
+                if dadosProduto["ID_PRODUTO"][idDoProduto] == idProduto:
+                    precoEditado = float(input(f'Trocar preço atual ({dadosProduto["PRECO_PRODUTO"][idProduto]}) para: ')) 
                     break
+            dadosProduto["PRECO_PRODUTO"][idProduto] = precoEditado
+            print("PREÇO EDITADO COM SUCESSO!!!")
             salvarCsv('Produto')
-            menuProdutos()    
+            sleep(0.5)
+            return menuProdutos()    
                         
 
 def excluirItem():
@@ -293,7 +297,7 @@ def excluirItem():
     salvarCsv('Produto')
     return menuProdutos()
 
-def mostrarEstoque() -> str: #defino o parametro igual a zero para ele ser opcional, por que se o usuario nao digitar nada ele esta pre setado com um valor
+def mostrarEstoque(): #defino o parametro igual a zero para ele ser opcional, por que se o usuario nao digitar nada ele esta pre setado com um valor
     os.system('cls')
     if not dadosProduto['ID_PRODUTO']:
         print('ESTOQUE VAZIO!!')
@@ -370,7 +374,7 @@ R:'''))
             sleep(0.5)
             continue
 
-def cadastrarFornecedor():
+def cadastrarFornecedor(parametro = "CadastroFornecedor"): #parametro fica opcional, mas quando chamado sem nenhum parametro "CadastroFornecedor" é o valor padrão
     os.system('cls')
     print('---CADASTRO DE FORNECEDOR---\n')   
 
@@ -381,15 +385,16 @@ def cadastrarFornecedor():
             sleep(0.5)
         break
 
-    dadosFornecedor['ID_FORNECEDOR'].append(f'{len(dadosFornecedor["ID_FORNECEDOR"])+1}')     #------------
-    dadosFornecedor['NOME_FORNECEDOR'].append(nome)                                      #fazer uma funcao para cadastrar cliente
+    dadosFornecedor['ID_FORNECEDOR'].append(len(dadosFornecedor["ID_FORNECEDOR"]))    
+    dadosFornecedor['NOME_FORNECEDOR'].append(nome)                                    
 
     os.system('cls')
+    
     salvarCsv('Fornecedor')
     print('Fornecedor cadastrado!!')
     sleep(0.5)
-    
-    return menuFornecedores()
+    if parametro != "CadastroProduto":
+        return menuFornecedores()
 
 def editarFornecedor():
     pass
@@ -474,7 +479,7 @@ def cadastrarCliente():
             sleep(0.5)
         break
 
-    dadosCliente['ID_CLIENTE'].append(f'{len(dadosCliente["ID_CLIENTE"])+1}')     #------------
+    dadosCliente['ID_CLIENTE'].append(len(dadosCliente["ID_CLIENTE"]))     #------------
     dadosCliente['NOME_CLIENTE'].append(nome)                                     #fazer uma funcao para cadastrar cliente
     salvarCsv('Cliente')
     
@@ -516,7 +521,7 @@ def editarCliente():
     os.system('cls')
     print(listaClientes())
     try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
-        idCliente = int(input('\nQual item deseja editar? [ID]: '))
+        idCliente = int(input('\nQual item deseja editar? [ID]:'))
     except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
         print('Apenas numeros!!')
         sleep(0.5)
@@ -527,20 +532,16 @@ def editarCliente():
         return menuClientes()
         
     else:
-        while True:
-            nomeEditado = str(input(f'\nRenomear [{dadosCliente["NOME_CLIENTE"][idCliente]}] para: ').upper())
-
-            if nomeEditado == dadosCliente['NOME_CLIENTE'][idCliente]:
-                print('O NOVO NOME NÃO PODE SER IGUAL AO ANTERIOR!!')
-                sleep(0.5)
-
-            elif nomeEditado in dadosCliente['NOME_CLIENTE']:
-                print(f'"{nomeEditado}" JA EXISTE!!')
-                sleep(0.5)
-            else:    
-                dadosCliente['NOME_CLIENTE'][idCliente] = nomeEditado
+        for idDoCliente in dadosCliente["ID_CLIENTE"]:
+            if dadosCliente["ID_CLIENTE"][idDoCliente] == idCliente:
+                nomeEditado = str(input(f'\nRenomear [{dadosCliente["NOME_CLIENTE"][idDoCliente]}] para: ').upper())
+                
+                dadosCliente['NOME_CLIENTE'][idDoCliente] = nomeEditado
                 print('ITEM RENOMEADO!!')
                 sleep(0.5)
                 break
+        salvarCsv('Cliente')
+        print('ITEM RENOMEADO!!')
+        sleep(0.5)
         return menuClientes()   
 #------/MENU CLIENTES------ 
