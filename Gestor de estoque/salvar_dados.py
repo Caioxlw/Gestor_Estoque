@@ -6,8 +6,8 @@ def obterCsv(opcao):
             
             linha = arquivo.readline()
             while linha: 
-                dado = linha.strip()   #-> strip retorna -> 'ID_PRODUTO,NOME_PRODUTO,'PRECO_PRODUTO',QUNATIDADE_PRODUTO'
-                dado = dado.split(',') #-> split retorna -> ['ID_PRODUTO', 'NOME_PRODUTO', 'PRECO_PRODUTO', 'QUNATIDADE_PRODUTO']
+                dado = linha.strip()   
+                dado = dado.split(',') 
                 dado[0] = int(dado[0])
                 dado[2] = float(dado[2])
                 dado[3] = int(dado[3]) #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -21,15 +21,25 @@ def obterCsv(opcao):
         arquivo.close()
     
     elif opcao == 'Clientes':
-        pass
+        with open("banco_de_dados/clientes.csv", "r") as arquivo:
+            
+            linha = arquivo.readline()
+            while linha: 
+                dado = linha.strip()   
+                dado = dado.split(',') 
+                dado[0] = int(dado[0])
+                dadosCliente['ID_CLIENTE'].append(dado[0]) 
+                dadosCliente['NOME_CLIENTE'].append(dado[1])
+                linha = arquivo.readline()  
+        arquivo.close()
 
     elif opcao == 'Fornecedores':
-        with open('./banco_de_dados/fornecedores.csv','r') as arquivo:
+        with open('banco_de_dados/fornecedores.csv','r') as arquivo:
             
             linha = arquivo.readline()
             while linha:
-                dado = linha.strip()   #-> strip retorna -> 'ID_PRODUTO,NOME_PRODUTO,'PRECO_PRODUTO',QUNATIDADE_PRODUTO'
-                dado = dado.split(',') #-> split retorna -> ['ID_PRODUTO', 'NOME_PRODUTO', 'PRECO_PRODUTO', 'QUNATIDADE_PRODUTO']
+                dado = linha.strip()   
+                dado = dado.split(',') 
                 dado[0] = int(dado[0])
 
                 dadosFornecedor['ID_FORNECEDOR'].append(dado[0]) 
@@ -48,7 +58,7 @@ def salvarCsv(opcao:str):
     elif opcao == 'Cliente':
         with open('banco_de_dados/clientes.csv','w') as arquivo:
             for i in range(len(dadosCliente['ID_CLIENTE'])):
-                arquivo.write(f'{dadosCliente["ID_CLIENTE"][i]},{dadosCliente["NOME_PRODUTO"][i]}\n')
+                arquivo.write(f'{dadosCliente["ID_CLIENTE"][i]},{dadosCliente["NOME_CLIENTE"][i]}\n')
         arquivo.close()
         
     elif opcao == 'Fornecedor':
