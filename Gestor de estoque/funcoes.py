@@ -31,7 +31,7 @@ R:'''))
                 case 1:
                     print('\nIndo para o menu de produtos...')
                     sleep(0.5)
-                    return menuProdutos()
+                    menuProdutos()
                 case 2:
                     print('\nIndo para o menu de clientes...')
                     sleep(0.5)
@@ -72,7 +72,7 @@ def menuProdutos():
             menu = int(input('''
     ---MENU DE PRODUTOS---
     1.CADASTRAR
-    2.RENOMEAR
+    2.EDITAR
     3.EXCLUIR
     4.ENTRADA
     5.MOSTRAR ESTOQUE
@@ -88,23 +88,29 @@ R:'''))
 
             match menu:
                 case 1:
-                    return cadastrar()
+                    
+                    cadastrarProduto()
                 case 2:
-                    return editarItem()
+                    
+                    editarItem()
                 case 3:
-                    return excluirItem() 
+                    
+                    excluirItem() 
                 case 4:
-                    return entradaItem()
+                    entradaItem()
                 case 5:
                     print(mostrarEstoque())
                     input('\nPressione enter para sair')
-                    return menuProdutos()
+                    
+                    menuProdutos()
                 case 0:
-                    return menuPrincipal()
+                    
+                    menuPrincipal()
                 case _:
                     print("OPÇÃO INVÁLIDA!")   
                     sleep(0.5)
-                    return menuProdutos() 
+                    
+                    menuProdutos() 
 
         except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
             os.system('cls')
@@ -121,33 +127,34 @@ def entradaItem():
         print('Estoque vazio!!')
         menuProdutos()
 
-    mostrarEstoque()
+    while True:
+        print(mostrarEstoque())
+        try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
+            idProduto = int(input('\nQual item deseja dar entrada? [ID]: '))
+        except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
+            print('Apenas numeros!!')
+            
+        if idProduto not in dadosProduto['ID_PRODUTO']:
+            print('OPÇÃO INVÁLIDA!!')
+            continue
+        break
+
+    while True:
+        try:
+            quantidadeItem = int(input(f'Dar entrada no item ID[{idProduto}] de: '))
+            if quantidadeItem < 0:
+                print("Apenas entradas de Estoque!")
+                continue
+            break
+        except ValueError:
+            print('Apenas numeros!!')
     
-    try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
-        idProduto = int(input('\nQual item deseja dar entrada? [ID]: '))
-    except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
-        print('Apenas numeros!!')
-        
-    if idProduto not in dadosProduto['ID_PRODUTO']:
-        print('OPÇÃO INVÁLIDA!!')
-        
-    else:
-        while True:
-            try:
-                quantidadeItem = int(input(f'Dar entrada em no item ID[{dadosProduto["QUANTIDADE_PRODUTO"][idProduto]}] de: '))
-                if quantidadeItem < 0:
-                    print("Apenas entradas de Estoque!")
-                    continue
-                break
-            except ValueError:
-                print('Apenas numeros!!')
-        
-            dadosProduto['QUANTIDADE_PRODUTO'][idProduto] += quantidadeItem
+    dadosProduto['QUANTIDADE_PRODUTO'][idProduto] += quantidadeItem
 
-            salvarCsv('Produto')
-            menuProdutos()
+    salvarCsv('Produto')
+    menuProdutos()
 
-def cadastrar():
+def cadastrarProduto():
         os.system('cls')
         print('---CADASTRO DE ITEM---')
 
@@ -173,6 +180,7 @@ def cadastrar():
         while True:
             
             try:
+                print(listarFornecedores())
                 fornecedor = int(input(f'{nomeProduto} é vinculado a qual fornecedor? [ID]\nEnter para cadastrar agora\n'))
                 break
             except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
@@ -185,11 +193,11 @@ def cadastrar():
         dadosProduto['QUANTIDADE_PRODUTO'].append(0)
         dadosProduto['FORNECEDOR_PRODUTO'].append(dadosFornecedor['NOME_FORNECEDOR'][fornecedor])
         os.system('cls')
-        salvarCsv()
+        salvarCsv('Produtos')
         print('Item cadastrado!!')
 
         sleep(0.5)
-        menuProdutos('Produto')
+        menuProdutos()
         
 def editarItem():
     if not dadosProduto['ID_PRODUTO']: #python trata vazios como falso
@@ -197,35 +205,63 @@ def editarItem():
         print('Estoque vazio!!')
         
         menuProdutos()
-
-    os.system('cls')
-    mostrarEstoque()
-    try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
-        idProduto = int(input('Qual item deseja editar? [ID]: '))
-    except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
-        print('Apenas numeros!!')
+    while True:
+        os.system('cls')
+        print(mostrarEstoque())
+        print('---EDITAR PRODUTO---')
         
-    if idProduto not in dadosProduto['ID_PRODUTO']:
-        print('OPÇÃO INVÁLIDA!!')
+        try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
+            idProduto = int(input('Qual item deseja editar? [ID]: '))
+        except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
+            print('Apenas numeros!!')
+            
+        if idProduto not in dadosProduto['ID_PRODUTO']:
+            print('OPÇÃO INVÁLIDA!!')
+            continue
+        break
+    
+    opcao = int(input('''
+    1.NOME
+    2.PREÇO
+
+    0.VOLTAR
+
+R:'''))
+    match opcao:
+        case 1:
+            while True:
+                nomeEditado = str(input(f'Renomear [{dadosProduto["NOME_PRODUTO"][idProduto]}] para: ').upper())
+
+                if nomeEditado == dadosProduto['NOME_PRODUTO'][idProduto]:
+                    print('NOVO NOME NÃO PODE SER IGUAL AO ANTERIOR!!')
+                    
+                elif nomeEditado in dadosProduto['NOME_PRODUTO']:
+                    print('ESSE NOME JA EXISTE!!')
+
+                else:    
+                    dadosProduto['NOME_PRODUTO'][idProduto] = nomeEditado
+                    print('NOME EDITADO COM SUCESSO!!')
         
-    else:
-        while True:
-            nomeEditado = str(input(f'Renomear [{dadosProduto["NOME_PRODUTO"][idProduto]}] para: ').upper())
+        
+                    break
+            salvarCsv('Produto')
+            menuProdutos()
 
-            if nomeEditado == dadosProduto['NOME_PRODUTO'][idProduto]:
-                print('NOVO NOME NÃO PODE SER IGUAL AO ANTERIOR!!')
-    
-            elif nomeEditado in dadosProduto['NOME_PRODUTO']:
-                print('ESSE NOME JA EXISTE!!')
+        case 2:
+            while True:
+                precoEditado = float(input(f'Trocar preço atual ({dadosProduto["PRECO_PRODUTO"][idProduto]}) para: ')) 
 
-            else:    
-                dadosProduto['NOME_PRODUTO'][idProduto] = nomeEditado
-                print('ITEM RENOMEADO!!')
-    
-    
-                break
-        salvarCsv('Produto')
-        menuProdutos()
+                if precoEditado == dadosProduto["PRECO_PRODUTO"][idProduto]:    
+                    print('NOVO NOME NÃO PODE SER IGUAL AO ANTERIOR!!')
+                else:
+                    dadosProduto["PRECO_PRODUTO"][idProduto] = precoEditado
+                    print("PREÇO EDITADO COM SUCESSO!!!")
+
+                
+                    break
+            salvarCsv('Produto')
+            menuProdutos()    
+                        
 
 def excluirItem():
     while True:
@@ -250,7 +286,6 @@ def excluirItem():
             dadosProduto['NOME_PRODUTO'].pop(i)
             dadosProduto['QUANTIDADE_PRODUTO'].pop(i)
             dadosProduto['PRECO_PRODUTO'].pop(i)
-            # removeu = True
             print('Item removido com sucesso!')    
             sleep(1)
             break
@@ -276,9 +311,9 @@ def mostrarEstoque() -> str: #defino o parametro igual a zero para ele ser opcio
     maiorNOME = len(max( nome ,key=len))
     maiorPRECO = len(str(max( preco )))
     maiorQTD = len(str(max( qtd )))
-    # maiorFORN = len(max(dadosProduto['FORNECEDOR_PRODUTO'],key=len))
 
     estoque_string += (f'ID{" "*(maiorID-2)} │ NOME{" "*(maiorNOME-4)} │ PRECO{" "*(maiorPRECO-5)} │ QUANTIDADE{" "*(maiorQTD-10)} │ FORNECEDOR\n')
+    # estoque_string += (f'') #fazer uma listrinha para separar do cabecalho
 
     for i in range(len(dadosProduto['ID_PRODUTO'])):
         
@@ -354,7 +389,7 @@ def cadastrarFornecedor():
     print('Fornecedor cadastrado!!')
     sleep(0.5)
     
-    menuFornecedores()
+    return menuFornecedores()
 
 def editarFornecedor():
     pass
@@ -370,15 +405,13 @@ def listarFornecedores():
     nome = dadosFornecedor['NOME_FORNECEDOR']
     
     fornecedor_string = ''
-    maiorID = len(str(max( id )))
+    maiorID = len(max(str( id )))
 
     fornecedor_string += (f'ID{" "*(maiorID-2)} │ NOME\n')
 
     for i in range(len(id)):
         
-        maiorID    = len(str(max( id )))      - len(str( id[i] ))
-        maiorNOME  = len(max( nome ,key=len)) - len( nome[i] )
-        
+        maiorID    = len(max(str( id ), key=len))      - len(str( id[i] ))
         fornecedor_string += (f'{id[i]}{" "*(maiorID)} │ {nome[i]}\n')
     return fornecedor_string
 
@@ -416,7 +449,7 @@ R:'''))
                 case 2:
                     return editarCliente()
                 case 3:
-                    return listaClientes(1)
+                    return listaClientes()
                 case 0:
                     return menuPrincipal()
                 case _:
@@ -435,7 +468,7 @@ def cadastrarCliente():
     print('---CADASTRO DE CLIENTE---\n')   
 
     while True:
-        nome = str(input('NOME_CLIENTE DO CLIENTE: ')).upper()
+        nome = str(input('NOME CLIENTE DO CLIENTE: ')).upper()
         if nome in dadosCliente['NOME_CLIENTE']:
             print(f'Item {nome} já existe!!')
             sleep(0.5)
@@ -443,39 +476,45 @@ def cadastrarCliente():
 
     dadosCliente['ID_CLIENTE'].append(f'{len(dadosCliente["ID_CLIENTE"])+1}')     #------------
     dadosCliente['NOME_CLIENTE'].append(nome)                                     #fazer uma funcao para cadastrar cliente
-
+    salvarCsv('Cliente')
+    
     os.system('cls')
     print('Cliente cadastrado!!')
     sleep(0.5)
+    return menuClientes()
     
-    menuClientes()
-    
-def listaClientes(flagParada = 0): #defino o parametro igual a zero para ele ser opcional, por que se o usuario nao digitar nada ele esta pre setado com um valor
+def listaClientes(): #defino o parametro igual a zero para ele ser opcional, por que se o usuario nao digitar nada ele esta pre setado com um valor
     os.system('cls')
-    correcaoEspacos = len(max(dadosCliente['NOME_CLIENTE'], key=len)) - 3 #max(dadosCliente, key=len) é o jeito de pegar a maior palavra por tamanho 
     
-    print(f'ID │ NOME') 
-
-    for i in range(len(dadosCliente['ID_CLIENTE'])):                                                                                #------------
-        correcaoEspacos -= len(dadosCliente['NOME_CLIENTE'][i])                                                                     # estrutura de mostra de clientes
-        print(f'{dadosCliente["ID_CLIENTE"][i]}  │ {dadosCliente["NOME_CLIENTE"][i]}{" "*correcaoEspacos}')                         #------------
-    
-    if flagParada == 1:
+    if not dadosCliente["ID_CLIENTE"]:
+        print('SEM CLIENTES!!')
         sleep(1)
-        input('\nPressione enter para sair')
-        menuClientes()
-    else:
-        pass
+        return menuClientes()
+        
+    id = dadosCliente['ID_CLIENTE']
+    nome = dadosCliente['NOME_CLIENTE']
+    
+    cliente_string = ''
+    maiorID = len(str(max( id )))
+
+    cliente_string += (f'ID{" "*(maiorID-2)} │ NOME\n')
+
+    for i in range(len(id)):
+        
+        maiorID    = len(str(max( id ))) - len(str( id[i] ))
+        cliente_string += (f'{id[i]}{" "*(maiorID)} │ {nome[i]}\n')
+    return cliente_string
+
 
 def editarCliente():
     if not dadosCliente['ID_CLIENTE']: #python trata vazios como falso
         os.system('cls')
         print('SEM CLIENTES CADASTRADOS!!')
         sleep(0.5)
-        menuClientes()
+        return menuClientes()
 
     os.system('cls')
-    listaClientes(0)
+    print(listaClientes())
     try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
         idCliente = int(input('\nQual item deseja editar? [ID]: '))
     except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
@@ -485,7 +524,7 @@ def editarCliente():
     if idCliente not in dadosCliente['ID_CLIENTE']:
         print('OPÇÃO INVÁLIDA!!')
         sleep(0.5)
-        menuClientes()
+        return menuClientes()
         
     else:
         while True:
@@ -503,5 +542,5 @@ def editarCliente():
                 print('ITEM RENOMEADO!!')
                 sleep(0.5)
                 break
-        menuClientes()   
+        return menuClientes()   
 #------/MENU CLIENTES------ 
