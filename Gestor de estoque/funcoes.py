@@ -380,12 +380,7 @@ def cadastrarFornecedor(parametro = "CadastroFornecedor"): #parametro fica opcio
     os.system('cls')
     print('---CADASTRO DE FORNECEDOR---\n')   
 
-    while True:
-        nome = str(input('NOME: ')).upper()
-        if nome in dadosFornecedor['NOME_FORNECEDOR']:
-            print(f'Item {nome} já existe!!')
-            sleep(0.5)
-        break
+    nome = str(input('NOME: ')).upper()
 
     dadosFornecedor['ID_FORNECEDOR'].append(len(dadosFornecedor["ID_FORNECEDOR"]))    
     dadosFornecedor['NOME_FORNECEDOR'].append(nome)                                    
@@ -400,12 +395,42 @@ def cadastrarFornecedor(parametro = "CadastroFornecedor"): #parametro fica opcio
         return menuFornecedores()
 
 def editarFornecedor():
-    pass
+    if not dadosFornecedor['ID_FORNECEDOR']: #python trata vazios como falso
+        os.system('cls')
+        print('Sem fornecedores!!')
+        sleep(0.5)
+        return menuFornecedores()
+
+
+    os.system('cls')
+    print(listarFornecedores())
+    print('---EDITAR FORNECEDOR---')
+    
+    try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
+        idFornecedor = int(input('Qual item deseja editar? [ID]: '))
+    except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
+        print('Apenas numeros!!')
+        
+    if idFornecedor not in dadosFornecedor['ID_FORNECEDOR']:
+        print('OPÇÃO INVÁLIDA!!')
+        sleep(0.5)
+        return editarFornecedor()
+    
+    for idDoFornecedor in dadosFornecedor["ID_FORNECEDOR"]:
+        if dadosFornecedor["ID_FORNECEDOR"][idDoFornecedor] == idFornecedor:
+            nomeEditado = str(input(f'Renomear [{dadosFornecedor["NOME_FORNECEDOR"][idFornecedor]}] para: ').upper())
+            dadosFornecedor['NOME_FORNECEDOR'][idDoFornecedor] = nomeEditado
+            break
+    print('NOME EDITADO COM SUCESSO!!')
+    salvarCsv('Fornecedor')
+    sleep(0.5)
+    return menuFornecedores()
+
 
 def listarFornecedores():
     os.system('cls')
     if not dadosFornecedor["ID_FORNECEDOR"]:
-        print('ESTOQUE VAZIO!!')
+        print('SEM FORNECEDORES!!')
         sleep(1)
         return menuFornecedores()
         
@@ -457,7 +482,10 @@ R:'''))
                 case 2:
                     return editarCliente()
                 case 3:
-                    return listaClientes()
+                    print(listarClientes())
+                    sleep(0.5)
+                    input('\nPressione enter para sair')
+                    return menuClientes()
                 case 0:
                     return menuPrincipal()
                 case _:
@@ -475,23 +503,19 @@ def cadastrarCliente():
     os.system('cls')
     print('---CADASTRO DE CLIENTE---\n')   
 
-    while True:
-        nome = str(input('NOME CLIENTE DO CLIENTE: ')).upper()
-        if nome in dadosCliente['NOME_CLIENTE']:
-            print(f'Item {nome} já existe!!')
-            sleep(0.5)
-        break
+    nome = str(input('NOME CLIENTE DO CLIENTE: ')).upper()
 
     dadosCliente['ID_CLIENTE'].append(len(dadosCliente["ID_CLIENTE"]))     #------------
     dadosCliente['NOME_CLIENTE'].append(nome)                                     #fazer uma funcao para cadastrar cliente
-    salvarCsv('Cliente')
     
     os.system('cls')
+
+    salvarCsv('Cliente')
     print('Cliente cadastrado!!')
     sleep(0.5)
     return menuClientes()
     
-def listaClientes(): #defino o parametro igual a zero para ele ser opcional, por que se o usuario nao digitar nada ele esta pre setado com um valor
+def listarClientes(): #defino o parametro igual a zero para ele ser opcional, por que se o usuario nao digitar nada ele esta pre setado com um valor
     os.system('cls')
     
     if not dadosCliente["ID_CLIENTE"]:
@@ -522,7 +546,7 @@ def editarCliente():
         return menuClientes()
 
     os.system('cls')
-    print(listaClientes())
+    print(listarClientes())
     try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
         idCliente = int(input('\nQual item deseja editar? [ID]:'))
     except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
@@ -532,15 +556,13 @@ def editarCliente():
     if idCliente not in dadosCliente['ID_CLIENTE']:
         print('OPÇÃO INVÁLIDA!!')
         sleep(0.5)
-        return menuClientes()
+        return editarCliente()
         
     else:
         for idDoCliente in dadosCliente["ID_CLIENTE"]:
             if dadosCliente["ID_CLIENTE"][idDoCliente] == idCliente:
                 nomeEditado = str(input(f'\nRenomear [{dadosCliente["NOME_CLIENTE"][idDoCliente]}] para: ').upper())
-                
                 dadosCliente['NOME_CLIENTE'][idDoCliente] = nomeEditado
-                print('ITEM RENOMEADO!!')
                 sleep(0.5)
                 break
         salvarCsv('Cliente')
