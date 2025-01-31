@@ -73,7 +73,7 @@ def menuPrincipal():
     obterCsv('Produtos')
     obterCsv('Clientes')
     obterCsv('Fornecedores')
-    obterCsv("Categorias")
+    obterCsv('Categorias')
     
     while True:
         os.system('cls')
@@ -166,7 +166,7 @@ R:'''))
                 case 4:
                     return entradaItem()
                 case 5:
-                    return categoriaItem()
+                    return cadastrarCategoria()
                 case 6:
                     print(mostrarEstoque())
                     input(f'\n{mensagemFormat("PRESSIONE ENTER PARA SAIR")}')
@@ -187,13 +187,14 @@ R:'''))
             sleep(0.5)
                 
 def entradaItem():
-    #for com {i}.{dadosProduto['NOME_PRODUTO'][i]
+    ##for com {i}.{dadosProduto['NOME_PRODUTO'][i]
     os.system('cls')
     print('═══╣ENTRADA DE ITEM╠═══')
-
-    if not dadosProduto['ID_PRODUTO']: #python trata vazios como falso
-        os.system('cls')
-        print(mensagemFormat('Estoque vazio!!'))
+    
+    os.system('cls')
+    if not dadosProduto['ID_PRODUTO']:
+        print('ESTOQUE VAZIO!!')
+        sleep(1)
         menuProdutos()
 
     while True:
@@ -252,13 +253,13 @@ def cadastrarProduto():
                 if not dadosFornecedor["ID_FORNECEDOR"]:
                     print(mensagemFormat('ANTES CADASTRE UM FORNECEDOR!!!!'))
                     sleep(2.5)
-                    fornecedor = cadastrarFornecedor("CadastroProduto")
+                    fornecedor = cadastrarFornecedor()
 
                 print(listarFornecedores("CadastrarProduto"))
                 print(mensagemFormat("Enter para cadastrar agora"))
                 fornecedor = (input(f'\n{nomeProduto} é vinculado a qual fornecedor? [ID]: '))
                 if not fornecedor:
-                    fornecedor = cadastrarFornecedor('CadastroProduto')
+                    fornecedor = cadastrarFornecedor()
                      
                     break
                 else:
@@ -274,6 +275,33 @@ def cadastrarProduto():
                 print('Apenas números!!')
                 sleep(0.5)
 
+        while True:
+            try:
+                if not dadosCategoria["ID_CATEGORIA"]:
+                    print(mensagemFormat('ANTES CADASTRE UMA CATEGORIA!!!!'))
+                    sleep(2.5)
+                    categoria = cadastrarCategoria("CadastrarProduto")
+
+                print(listarCategoria("CadastrarProduto"))
+                print(mensagemFormat("Enter para cadastrar agora"))
+                categoria = (input(f'\n{nomeProduto} é vinculado a qual categoria? [ID]: '))
+                if not categoria:
+                    categoria = cadastrarCategoria("CadastrarProduto")
+
+                    break
+                else:
+                    categoria = int(categoria)
+                    if categoria not in dadosCategoria["ID_CATEGORIA"]:
+                        print(mensagemFormat(f"Categoria ID:{categoria} não encontrado"))
+                        sleep(2.5)
+                    else:
+                        break
+
+            except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
+
+                print('Apenas números!!')
+                sleep(0.5)
+
         if not dadosProduto['ID_PRODUTO']:
             dadosProduto['ID_PRODUTO'].append(1)
         else:
@@ -282,11 +310,16 @@ def cadastrarProduto():
         dadosProduto['NOME_PRODUTO'].append(nomeProduto)                
         dadosProduto['PRECO_PRODUTO'].append(precoProduto)      
         dadosProduto['QUANTIDADE_PRODUTO'].append(0)
-        dadosProduto['CATEGORIA_PRODUTO'].append('ImplementacaoDeCategoriaEmBreve')
+        
 
         for linha in range(len(dadosFornecedor['ID_FORNECEDOR'])):
             if dadosFornecedor['ID_FORNECEDOR'][linha] == fornecedor:
                 dadosProduto['FORNECEDOR_PRODUTO'].append(dadosFornecedor['NOME_FORNECEDOR'][linha])
+                break
+        
+        for linha in range(len(dadosCategoria['ID_CATEGORIA'])):
+            if dadosCategoria['ID_CATEGORIA'][linha] == categoria:
+                dadosProduto['CATEGORIA_PRODUTO'].append(dadosCategoria['NOME_CATEGORIA'][linha])
                 break
             
         os.system('cls')
@@ -299,7 +332,7 @@ def cadastrarProduto():
 def editarItem():
     if not dadosProduto['ID_PRODUTO']: #python trata vazios como falso
         os.system('cls')
-        print('Estoque vazio!!')
+        print('ESTOQUE VAZIO!!')
         sleep(0.5)
         return menuProdutos()
 
@@ -393,10 +426,12 @@ def excluirItem():
     salvarCsv('Produto')
     return menuProdutos()
         
-def categoriaItem():
+def cadastrarCategoria(parametro = ''):
     
     while True:
         os.system('cls')
+        
+            
         try:
             menu = int(input('''
     ---MENU DE CATEGORIA---
@@ -422,14 +457,17 @@ R:'''))
                     dadosCategoria["ID_CATEGORIA"].append(dadosCategoria["ID_CATEGORIA"][len(dadosCategoria["ID_CATEGORIA"])-1] +1 )
                     dadosCategoria["NOME_CATEGORIA"].append(nomeCateg)
                     
-                salvarCsv("Categoria")
+                salvarCsv('Categoria')
                 print('CATEGORIA CRIADA!!')
                 sleep(1.5)
+                if parametro == "CadastrarProduto":
+                    
+                    return
 
             case 2:
                 while True:
                     os.system("cls")
-                    print(listagem(dadosCategoria["ID_CATEGORIA"],dadosCategoria["NOME_CATEGORIA"]))
+                    print(listarCategoria())
                     try:
                         idCateg = int(input("QUAL CATEGORIA? [ID]\n"))
                         if idCateg not in dadosCategoria["ID_CATEGORIA"]:
@@ -454,7 +492,7 @@ R:'''))
             case 3:
                 while True:
                     os.system("cls")
-                    print(listagem(dadosCategoria["ID_CATEGORIA"],dadosCategoria["NOME_CATEGORIA"]))
+                    print(listarCategoria())
                     try:
                         idCateg = int(input("QUAL CATEGORIA? [ID]\n"))
                         break
@@ -474,8 +512,25 @@ R:'''))
 
             case 0:
                 return menuProdutos()
+            
+            case _:
+                print("OPÇÃO INVÁLIDA!")   
+                sleep(0.5)
+                return cadastrarCategoria()
                           
-
+def listarCategoria(opcao = "Categoria"):
+    os.system('cls')
+    if opcao == "CadastrarCategoria":
+        if not dadosCategoria["ID_CATEGORIA"]:
+            print('SEM CATEGORIAS!!')
+            sleep(1)
+    elif opcao == "Categoria":
+        if not dadosCategoria["ID_CATEGORIA"]:
+            print('SEM CATEGORIAS!!')
+            sleep(1)
+            return cadastrarCategoria()
+        
+    return listagem(dadosCategoria['ID_CATEGORIA'],dadosCategoria['NOME_CATEGORIA'] )    
 
 def mostrarEstoque(): #defino o parametro igual a zero para ele ser opcional, por que se o usuario nao digitar nada ele esta pre setado com um valor
 
@@ -661,7 +716,7 @@ def cadastrarFornecedor(parametro = "CadastroFornecedor"): #parametro fica opcio
 def editarFornecedor():
     if not dadosFornecedor['ID_FORNECEDOR']: #python trata vazios como falso
         os.system('cls')
-        print('SEM FORNECEDORES!!')
+        print('SEM FORNECEDORES CADASTRADOS!!')
         sleep(0.5)
         return menuFornecedores()
 
@@ -694,11 +749,11 @@ def listarFornecedores(opcao = "Fornecedor"):
     os.system('cls')
     if opcao == "CadastrarProduto":
         if not dadosFornecedor["ID_FORNECEDOR"]:
-            print('SEM FORNECEDORES!!')
+            print('SEM FORNECEDORES CADASTRADOS!!')
             sleep(1)
     elif opcao == "Fornecedor":
         if not dadosFornecedor["ID_FORNECEDOR"]:
-            print('SEM FORNECEDORES!!')
+            print('SEM FORNECEDORES CADASTRADOS!!')
             sleep(1)
             return menuFornecedores()
     
@@ -818,8 +873,8 @@ def listarClientes(): #defino o parametro igual a zero para ele ser opcional, po
     os.system('cls')
     
     if not dadosCliente["ID_CLIENTE"]:
-        print('SEM CLIENTES!!')
-        sleep(1)
+        print('SEM CLIENTES CADASTRADOS!!')
+        sleep(0.5)
         return menuClientes()
         
     
