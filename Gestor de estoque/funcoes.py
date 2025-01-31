@@ -426,26 +426,28 @@ def excluirItem():
     salvarCsv('Produto')
     return menuProdutos()
         
-def cadastrarCategoria(parametro = ''):
-    
+def cadastrarCategoria(parametro = ''): 
+    os.system('cls')
     while True:
         os.system('cls')
-        
+        if parametro == "CadastrarProduto": ## Se parametro for igual ele ja pula logo para cadastrar uma nova categoria, usado quando nao se tem categoria e vai cadastrar um produto novo
+            menu = 1
+        else:    
             
-        try:
-            menu = int(input('''
-    ---MENU DE CATEGORIA---
-    1.CRIAR CATEGORIA
-    2.EDITAR CATEGORIA
-    3.EXCLUIR CATEGORIA
+            try:
+                menu = int(input('''
+        ---MENU DE CATEGORIA---
+        1.CRIAR CATEGORIA
+        2.EDITAR CATEGORIA
+        3.EXCLUIR CATEGORIA
 
-    0.VOLTAR
+        0.VOLTAR
 
-R:'''))
-        except ValueError:
-            os.system('cls')
-            print('APENAS NUMEROS!!')
-            sleep(1)
+    R:'''))
+            except ValueError:
+                os.system('cls')
+                print('APENAS NUMEROS!!')
+                sleep(1)
             
         match menu:
             case 1:
