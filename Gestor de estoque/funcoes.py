@@ -253,13 +253,13 @@ def cadastrarProduto():
                 if not dadosFornecedor["ID_FORNECEDOR"]:
                     print(mensagemFormat('ANTES CADASTRE UM FORNECEDOR!!!!'))
                     sleep(2.5)
-                    fornecedor = cadastrarFornecedor()
+                    fornecedor = cadastrarFornecedor('CadastroProduto')
 
                 print(listarFornecedores("CadastrarProduto"))
                 print(mensagemFormat("Enter para cadastrar agora"))
                 fornecedor = (input(f'\n{nomeProduto} é vinculado a qual fornecedor? [ID]: '))
                 if not fornecedor:
-                    fornecedor = cadastrarFornecedor()
+                    fornecedor = cadastrarFornecedor('CadastroProduto')
                      
                     break
                 else:
