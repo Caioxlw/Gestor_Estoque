@@ -451,6 +451,8 @@ def cadastrarCategoria(parametro = ''):
             
         match menu:
             case 1:
+                if parametro == "CadastrarProduto":
+                    print('═══╣CADASTRO DE CATEGORIA╠═══\n') 
                 nomeCateg = input('DEFINA O NOME DA CATEGORIA:\n').upper()
                 if not dadosCategoria["ID_CATEGORIA"]:
                     dadosCategoria["ID_CATEGORIA"].append(1)
@@ -696,7 +698,7 @@ def cadastrarFornecedor(parametro = "CadastroFornecedor"): #parametro fica opcio
     os.system('cls')
     print('═══╣CADASTRO DE FORNECEDOR╠═══\n')   
 
-    nome = str(input('NOME: ')).upper()
+    nome = str(input('NOME:\n')).upper()
     if not dadosFornecedor["ID_FORNECEDOR"]:
         dadosFornecedor["ID_FORNECEDOR"].append(1)
         idFornecedor = 1
