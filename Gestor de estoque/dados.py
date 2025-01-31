@@ -20,6 +20,12 @@ dadosFornecedor = {
     'NOME_FORNECEDOR':[]
 }
 
+global dadosCategoria
+dadosCategoria = {
+    'ID_CATEGORIA':[],
+    'NOME_CATEGORIA':[]
+}
+
 global dadosVendas
 dadosVendas = {
     'ID_VENDAS':[],
