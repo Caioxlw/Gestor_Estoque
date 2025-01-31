@@ -8,6 +8,7 @@ def obterCsv(opcao):
             while linha: 
                 dado = linha.strip()   
                 dado = dado.split(',') 
+                
                 dado[0] = int(dado[0])
                 dado[2] = float(dado[2])
                 dado[3] = int(dado[3]) 
@@ -47,13 +48,30 @@ def obterCsv(opcao):
                 dadosFornecedor['NOME_FORNECEDOR'].append(dado[1])
                 linha = arquivo.readline()  
         arquivo.close()
+
+    elif opcao == 'Categorias':
+        
+        with open('banco_de_dados/categorias.csv','r') as arquivo:
+            
+            linha = arquivo.readline()
+            while linha:
+                dado = linha.strip()   
+                dado = dado.split(',') 
+                
+                dado[0] = int(dado[0])
+
+                dadosCategoria['ID_CATEGORIA'].append(dado[0])
+                dadosCategoria['NOME_CATEGORIA'].append(dado[1])
+                linha = arquivo.readline()  
+        arquivo.close()        
+
     
 def salvarCsv(opcao:str):
     
     if opcao == 'Produto':
         with open('banco_de_dados/produtos.csv','w') as arquivo:
             for i in range(len(dadosProduto['ID_PRODUTO'])):
-                arquivo.write(f'{dadosProduto["ID_PRODUTO"][i]},{dadosProduto["NOME_PRODUTO"][i]},{dadosProduto["PRECO_PRODUTO"][i]},{dadosProduto["QUANTIDADE_PRODUTO"][i]},{dadosProduto["FORNECEDOR_PRODUTO"][i]},{dadosProduto['CATEGORIA_PRODUTO'[i]]}\n')
+                arquivo.write(f'{dadosProduto["ID_PRODUTO"][i]},{dadosProduto["NOME_PRODUTO"][i]},{dadosProduto["PRECO_PRODUTO"][i]},{dadosProduto["QUANTIDADE_PRODUTO"][i]},{dadosProduto["FORNECEDOR_PRODUTO"][i]},{dadosProduto["CATEGORIA_PRODUTO"][i]}\n')
         arquivo.close()
         
     elif opcao == 'Cliente':
@@ -67,3 +85,9 @@ def salvarCsv(opcao:str):
             for i in range(len(dadosFornecedor['ID_FORNECEDOR'])):
                 arquivo.write(f'{dadosFornecedor["ID_FORNECEDOR"][i]},{dadosFornecedor["NOME_FORNECEDOR"][i]}\n')
         arquivo.close()
+
+    elif opcao == 'Categoria':
+        with open('banco_de_dados/categorias.csv','w') as arquivo:
+            for i in range(len(dadosCategoria['ID_CATEGORIA'])):
+                arquivo.write(f'{dadosCategoria['ID_CATEGORIA'][i]},{dadosCategoria['NOME_CATEGORIA'][i]}\n')
+        arquivo.close()        
