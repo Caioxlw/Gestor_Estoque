@@ -210,6 +210,20 @@ def cadastrarProduto():
             sleep(2.5)
             return cadastrarCategoria()
         
+        while True:
+            os.system("cls")
+            print(listarFornecedores())
+            try:
+                idFornecedor = int(input('QUAL O ID FORNECEDOR O PRODUTO PERTENCE(digite 0 para voltar): '))
+                cancelar(idFornecedor,menuProdutos,'int')
+                if idFornecedor not in dadosFornecedor["ID_FORNECEDOR"]:
+                    print(mensagemFormat("ID INEXISTENTE!!"))
+                    sleep(1)
+                else:
+                    break
+            except ValueError:
+                print(mensagemFormat("APENAS NÚMEROS!!"))
+                sleep(1)
         print(listarFornecedores())
         # print('═╣FORNECEDOR╠═\n')
         idFornecedor = int(input('QUAL O ID FORNECEDOR O PRODUTO PERTENCE(DIGITE 0 PARA VOLTAR): '))
@@ -220,6 +234,26 @@ def cadastrarProduto():
                 dadosProduto['FORNECEDOR_PRODUTO'].append(dadosFornecedor['NOME_FORNECEDOR'][linha])
                 break
 
+        
+        while True:
+            os.system("cls")
+            print(listarCategoria())
+            try:
+                idCategoria = int(input('\QUAL O ID DA CATEGORIA O PRODUTO PERTENCE(digite 0 para voltar): '))
+                cancelar(idCategoria,menuProdutos,'int')
+                if idCategoria not in dadosCategoria["ID_CATEGORIA"]:
+                    print(mensagemFormat("ID INEXISTENTE!!"))
+                    sleep(1)
+                else:
+                    break
+            except ValueError:
+                print(mensagemFormat("APENAS NÚMEROS!!"))
+                sleep(1)
+
+        for linha in range(len(dadosFornecedor['ID_FORNECEDOR'])):
+            if dadosFornecedor['ID_FORNECEDOR'][linha] == idFornecedor:
+                dadosProduto['FORNECEDOR_PRODUTO'].append(dadosFornecedor['NOME_FORNECEDOR'][linha])
+                break
         print(listarCategoria())
         # print('═╣CATEGORIA╠═\n')
         idCategoria = int(input('QUAL O ID DA CATEGORIA O PRODUTO PERTENCE(DIGITE 0 PARA VOLTAR): '))
@@ -717,7 +751,7 @@ def menuFornecedores():
     ║   3.EXCLUIR FORNECEDOR    ║
     ║   4.LISTAR FORNECEDOR     ║
     ║                           ║
-    ║  0.SALVAR E SALVAR        ║             
+    ║  0.SALVAR E SAIR          ║             
     ╚═══════════════════════════╝              
 R:'''))
 
@@ -779,6 +813,8 @@ def excluirFornecedor():
         print(listarFornecedores())
         print('══════════════════════╣EXCLUIR FORNECEDOR╠══════════════════════')
         try:
+            idForn = int(input("QUAL FORNECEDOR VOCE DESEJA EXCLUIR? [ID](digite 0 para voltar):\n"))
+            cancelar(idForn,menuFornecedores,'int')
             idForn = int(input("\nQUAL FORNECEDOR VOCE DESEJA EXCLUIR? [ID](DIGITE 0 PARA VOLTAR):"))
             cancelar(idForn,menuFornecedores,'int')
             break
@@ -981,7 +1017,7 @@ def editarCliente():
         return editarCliente()
         
     else:
-        for idDoCliente in dadosCliente["ID_CLIENTE"]:
+        for idDoCliente in range(len(dadosCliente["ID_CLIENTE"])):
             if dadosCliente["ID_CLIENTE"][idDoCliente] == idCliente:
                 nomeEditado = str(input(f'\nRENOMEAR [{dadosCliente["NOME_CLIENTE"][idDoCliente]}] PARA: ').upper())
                 dadosCliente['NOME_CLIENTE'][idDoCliente] = nomeEditado
