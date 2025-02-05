@@ -224,22 +224,12 @@ def cadastrarProduto():
             except ValueError:
                 print(mensagemFormat("APENAS NÚMEROS!!"))
                 sleep(1)
-        print(listarFornecedores())
-        # print('═╣FORNECEDOR╠═\n')
-        idFornecedor = int(input('QUAL O ID FORNECEDOR O PRODUTO PERTENCE(DIGITE 0 PARA VOLTAR): '))
-        cancelar(idFornecedor,menuProdutos,'int')
-
-        for linha in range(len(dadosFornecedor['ID_FORNECEDOR'])):
-            if dadosFornecedor['ID_FORNECEDOR'][linha] == idFornecedor:
-                dadosProduto['FORNECEDOR_PRODUTO'].append(dadosFornecedor['NOME_FORNECEDOR'][linha])
-                break
-
-        
+                
         while True:
             os.system("cls")
             print(listarCategoria())
             try:
-                idCategoria = int(input('\QUAL O ID DA CATEGORIA O PRODUTO PERTENCE(digite 0 para voltar): '))
+                idCategoria = int(input('QUAL O ID DA CATEGORIA O PRODUTO PERTENCE(digite 0 para voltar): '))
                 cancelar(idCategoria,menuProdutos,'int')
                 if idCategoria not in dadosCategoria["ID_CATEGORIA"]:
                     print(mensagemFormat("ID INEXISTENTE!!"))
@@ -254,10 +244,6 @@ def cadastrarProduto():
             if dadosFornecedor['ID_FORNECEDOR'][linha] == idFornecedor:
                 dadosProduto['FORNECEDOR_PRODUTO'].append(dadosFornecedor['NOME_FORNECEDOR'][linha])
                 break
-        print(listarCategoria())
-        # print('═╣CATEGORIA╠═\n')
-        idCategoria = int(input('QUAL O ID DA CATEGORIA O PRODUTO PERTENCE(DIGITE 0 PARA VOLTAR): '))
-        cancelar(idCategoria,menuProdutos,'int')
         
         for linha in range(len(dadosCategoria['ID_CATEGORIA'])):
             if dadosCategoria['ID_CATEGORIA'][linha] == idCategoria:
@@ -751,7 +737,7 @@ def menuFornecedores():
     ║   3.EXCLUIR FORNECEDOR    ║
     ║   4.LISTAR FORNECEDOR     ║
     ║                           ║
-    ║  0.SALVAR E SAIR          ║             
+    ║  0.VOLTAR                 ║             
     ╚═══════════════════════════╝              
 R:'''))
 
