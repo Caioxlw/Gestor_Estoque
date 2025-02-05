@@ -1,7 +1,7 @@
 import os
 from time import sleep
 from dados import *
-from salvar_dados import *
+from salvar_dados import salvarCsv
 
 #------FUNCOES AUX-------
     
@@ -87,11 +87,7 @@ def cancelar(variavelInput:str, funcaoDeVolta, tipo:str='str'):
 #------MENU PRINCIPAL-------
 
 def menuPrincipal():
-    obterCsv('Produtos')
-    obterCsv('Clientes')
-    obterCsv('Fornecedores')
-    obterCsv('Categorias')
-    
+
     while True:
         os.system('cls')
         try: 
@@ -147,10 +143,6 @@ R:'''))
 
 #------MENU PRODUTOS------ 
 def menuProdutos():
-    # obterCsv('Produtos')
-    # obterCsv('Clientes')
-    # obterCsv('Fornecedores')
-    # obterCsv('Categorias')
 
     while True:
         os.system('cls')
@@ -211,10 +203,11 @@ def cadastrarProduto():
     
         if not dadosCategoria["ID_CATEGORIA"]:
             print(mensagemFormat('ANTES CADASTRE UMA CATEGORIA!!!!'))
+            sleep(2.5)
             return cadastrarCategoria()
         
         print(listarFornecedores())
-        idFornecedor = int(input('\QUAL O ID FORNECEDOR O PRODUTO PERTENCE(digite 0 para voltar): '))
+        idFornecedor = int(input('QUAL O ID FORNECEDOR O PRODUTO PERTENCE(digite 0 para voltar): '))
         cancelar(idFornecedor,menuProdutos,'int')
 
         for linha in range(len(dadosFornecedor['ID_FORNECEDOR'])):
@@ -294,9 +287,6 @@ def editarProduto():
             continue
         
         break
-    
-#   ║  3.CATEGORIA  ║
-#   ║  4.FORNECEDOR ║
     opcao = int(input('''
   ╔═══════════════╗
   ║  1.NOME       ║
@@ -372,11 +362,9 @@ def excluirItem():
     return menuProdutos()
         
 def movimentacoesItem():
-    ##for com {i}.{dadosProduto['NOME_PRODUTO'][i]
     os.system('cls')
-    print('═══╣ENTRADA DE ITEM╠═══')
     
-    os.system('cls')
+    print('═══╣MOVIMENTACAO DE ITEM╠═══')
     if not dadosProduto['ID_PRODUTO']:
         print('ESTOQUE VAZIO!!')
         sleep(1)
@@ -385,34 +373,68 @@ def movimentacoesItem():
     while True:
         print(mostrarEstoque())
         try:
-            idProduto = int(input('\nQual item deseja fazer uma movimentacao? [ID](ditige 0 para voltar): '))
+            idProduto = int(input('\nQUAL ITEM DESEJA FAZER UMA MOVIMENTACAO? [ID](DITIGE 0 PARA VOLTAR): '))
             cancelar(idProduto,menuProdutos,'int')
-        except ValueError:
-            print(mensagemFormat('APENAS NUMEROS!!'))
-            
-        if idProduto not in dadosProduto['ID_PRODUTO']:
-            print(mensagemFormat('OPÇÃO INVÁLIDA!!'))
-            continue
-        break
-
-    while True:
-        try:
-            quantidadeItem = int(input(f'Fazer movimentacao no item ID[{idProduto}] de: '))
-            
-            for linha in range(len(dadosProduto['ID_PRODUTO'])):
-                if dadosProduto['ID_PRODUTO'][linha] == idProduto:
-
-                    if dadosProduto['QUANTIDADE_PRODUTO'][linha] + quantidadeItem < 0:
-                        print(mensagemFormat('MOVIMENTACAO INVALIDA !!'))
-                        continue
-                    dadosProduto['QUANTIDADE_PRODUTO'][linha] += quantidadeItem
-                    break
+            if idProduto not in dadosProduto['ID_PRODUTO']:
+                print(mensagemFormat('OPÇÃO INVÁLIDA!!'))
+                sleep(1.5)
+                continue
             break
         except ValueError:
             print(mensagemFormat('APENAS NUMEROS!!'))
+            sleep(1.5)
+            
+            
+
+    while True:
+        try:
+            opcaoMov = int(input(f'''
+FAZER QUE TIPO DE MOVIMENTACAO NO ITEM ID[{idProduto}]:
+    ╔═════════════╗
+    ║  1.ENTRADA  ║
+    ║  2.SAIDA    ║
+    ║             ║
+    ║ 0.VOLTAR    ║             
+    ╚═════════════╝
+R: '''))
+            cancelar(opcaoMov,menuProdutos,'int')
+            break
+        except ValueError:
+            print(mensagemFormat('APENAS NUMEROS!!'))
+            sleep(1.5)
+
+
+    while True:
+        
+        try:    
+            if opcaoMov == 1:
+                quantidadeItem = int(input(f'\nENTRADA ID[{idProduto}] DE: '))
+                if quantidadeItem < 0:
+                    print(mensagemFormat("ENTRADA NÃO PODE SER NEGATIVA!"))
+                    sleep(1.5)
+                    continue
+                break
+            elif opcaoMov == 2:
+                quantidadeItem = int(input(f'\nSAIDA ID[{idProduto}] DE: '))
+                if quantidadeItem > 0:
+                    quantidadeItem = quantidadeItem * (-1)
+                break
+
+        except ValueError:
+            print(mensagemFormat('APENAS NUMEROS!!'))
+        
+    for linha in range(len(dadosProduto['ID_PRODUTO'])):
+        if dadosProduto['ID_PRODUTO'][linha] == idProduto:
+            if dadosProduto['QUANTIDADE_PRODUTO'][linha] + quantidadeItem < 0:
+                print(mensagemFormat(f'MOVIMENTACAO INVALIDA !! NAO É POSSIVEL QUE O ITEM ID[{idProduto}] FIQUE NEGATIVADO'))
+                sleep(2)
+                return movimentacoesItem()
+            dadosProduto['QUANTIDADE_PRODUTO'][linha] += quantidadeItem
+            break #sai do for
+        
             
     salvarCsv('Produto')
-    print(mensagemFormat('Movimentacao feita com sucesso!!!'))
+    print(mensagemFormat('MOVIMENTACAO FEITA COM SUCESSO!!!'))
     sleep(0.5)
     menuProdutos()
 
@@ -538,10 +560,6 @@ def mostrarEstoque():
 #------MENU CATEGORIAS------ 
 
 def menuCategoria():
-    # obterCsv('Produtos')
-    # obterCsv('Clientes')
-    # obterCsv('Fornecedores')
-    # obterCsv('Categorias')
     while True:
         os.system('cls')
 
@@ -584,12 +602,11 @@ R:'''))
             sleep(0.5)
 
 def cadastrarCategoria(): 
-    os.system('cls')
     while True:
         os.system('cls')
         print('═══╣CADASTRO DE CATEGORIA╠═══\n') 
         nomeCateg = input('\nDEFINA O NOME DA CATEGORIA(enter para voltar):').upper()
-        cancelar(nomeCateg,cadastrarCategoria)
+        cancelar(nomeCateg,menuCategoria)
         if not dadosCategoria["ID_CATEGORIA"]:
             dadosCategoria["ID_CATEGORIA"].append(1)
         else:
@@ -659,7 +676,7 @@ def excluirCategoria():
     else:   
         for i in range(len(dadosCategoria["ID_CATEGORIA"])):
             if dadosCategoria["ID_CATEGORIA"][i] == idCateg:
-                print(f"CATEGORIA {dadosCategoria["ID_CATEGORIA"]} REMOVIDO!!")
+                print(f"CATEGORIA {dadosCategoria["NOME_CATEGORIA"][i]} REMOVIDO!!")
                 dadosCategoria["ID_CATEGORIA"].pop(i)
                 dadosCategoria["NOME_CATEGORIA"].pop(i)
                 break
@@ -683,10 +700,6 @@ def listarCategoria():
 
 #------MENU FORNECEDORES------ 
 def menuFornecedores():
-    # obterCsv('Produtos')
-    # obterCsv('Clientes')
-    # obterCsv('Fornecedores')
-    # obterCsv('Categorias')
     while True:
         os.system('cls')
         try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
@@ -695,7 +708,8 @@ def menuFornecedores():
     ╔═════╣MENU FORNECEDOR╠═════╗
     ║   1.CADASTRAR FORNECEDOR  ║
     ║   2.EDITAR FORNECEDOR     ║
-    ║   3.LISTAR FORNECEDOR     ║
+    ║   3.EXCLUIR FORNECEDOR    ║
+    ║   4.LISTAR FORNECEDOR     ║
     ║                           ║
     ║  0.SALVAR E SALVAR        ║             
     ╚═══════════════════════════╝              
@@ -707,6 +721,8 @@ R:'''))
                 case 2:
                     return editarFornecedor()
                 case 3:
+                    return excluirFornecedor()
+                case 4:
                     print(listarFornecedores())
                     sleep(0.5)
                     input(f'{mensagemFormat("PRESSIONE ENTER PARA SAIR")}')
@@ -727,7 +743,8 @@ R:'''))
 def cadastrarFornecedor():
     os.system('cls')
     print('═══╣CADASTRO DE FORNECEDOR╠═══\n')   
-    nome = str(input('NOME:\n')).upper()
+    nome = str(input('NOME DO FORNECEDOR (enter para voltar):\n')).upper()
+    cancelar(nome,menuFornecedores)
     if not dadosFornecedor["ID_FORNECEDOR"]:
         dadosFornecedor["ID_FORNECEDOR"].append(1)
     else:
@@ -740,6 +757,38 @@ def cadastrarFornecedor():
     print(mensagemFormat('FORNECEDOR CADASTRADO!!'))
     sleep(1.5)
     
+    return menuFornecedores()
+
+def excluirFornecedor():
+    if not dadosFornecedor["ID_FORNECEDOR"]:
+        print(mensagemFormat('ANTES CADASTRE UM FORNECEDOR!!!!'))
+        sleep(2.5)
+        return cadastrarFornecedor()
+    
+    while True:
+        os.system("cls")
+        print(listarFornecedores())
+        try:
+            idForn = int(input("QUAL FORNECEDOR VOCE DESEJA EXCLUIR? [ID](digite 0 para voltar):\n"))
+            cancelar(idForn,cadastrarFornecedor,'int')
+            break
+        except ValueError:
+            print(mensagemFormat("APENAS NUMEROS!!"))
+
+    if idForn not in dadosFornecedor["ID_FORNECEDOR"]:
+        print(mensagemFormat("OPÇÃO INVÁLIDA!!"))
+        sleep(1.5)
+    else:   
+        for i in range(len(dadosFornecedor["ID_FORNECEDOR"])):
+            if dadosFornecedor["ID_FORNECEDOR"][i] == idForn:
+                print(f"FORNECEDOR '{dadosFornecedor["NOME_FORNECEDOR"][i]}' REMOVIDO!!")
+                dadosFornecedor["ID_FORNECEDOR"].pop(i)
+                dadosFornecedor["NOME_FORNECEDOR"].pop(i)
+                break
+
+    salvarCsv('Fornecedor')
+    sleep(1.5)
+
     return menuFornecedores()
 
 def editarFornecedor():
@@ -787,22 +836,18 @@ def listarFornecedores():
 #------/MENU FORNECEDORES------ 
 
 #------MENU CLIENTES------ 
-def menuClientes():  
-    # obterCsv('Produtos')
-    # obterCsv('Clientes')
-    # obterCsv('Fornecedores')
-    # obterCsv('Categorias')       
+def menuClientes():     
 
     while True:
         os.system('cls')
 
-        try: #try vai rodar o bloco dentro dele, caso der algum erro, o except é chamado
+        try:
             menu = int(input('''
     ╔═╣MENU DE CLIENTES╠═╗
     ║    1.CADASTRAR     ║    
     ║    2.EDITAR        ║
     ║    3.EXCLUIR       ║
-    ║    3.LISTAR        ║
+    ║    4.LISTAR        ║
     ║                    ║    
     ║    0. VOLTAR       ║
     ╚════════════════════╝
@@ -814,17 +859,20 @@ R:'''))
                 case 2:
                     return editarCliente()
                 case 3:
+                    return excluirCliente()
+                case 4:
                     print(listarClientes())
                     sleep(0.5)
-                    input('\nPRESSIONE ENTER PARA SAIR')
+                    input(mensagemFormat('PRESSIONE ENTER PARA SAIR'))
                     return menuClientes()
                 case 0:
                     return menuPrincipal()
                 case _:
-                    print(mensagemFormat("OPÇÃO INVÁLIDA!"))    
+                    print(mensagemFormat("OPÇÃO INVÁLIDA!")) 
+                    sleep(1.5)   
                     continue
 
-        except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
+        except ValueError: 
             
             os.system('cls')
             print('APENAS NÚMEROS!!')
@@ -832,19 +880,57 @@ R:'''))
             continue
 
 def cadastrarCliente(): 
-    os.system('cls')
-    print('═══╣CADASTRO DE CLIENTE╠═══\n')   
-    nome = str(input('NOME CLIENTE DO CLIENTE(enter para voltar): ')).upper()
-    cancelar(nome,menuClientes)
+    while True:
+        os.system('cls')
+        print('═══╣CADASTRO DE CLIENTE╠═══\n')   
+        nome = str(input('NOME CLIENTE DO CLIENTE(enter para voltar): ')).upper()
+        cancelar(nome,menuClientes)
 
-    dadosCliente['ID_CLIENTE'].append(len(dadosCliente["ID_CLIENTE"]))     #------------
-    dadosCliente['NOME_CLIENTE'].append(nome)                                     #fazer uma funcao para cadastrar cliente
-    
+        if not dadosCliente["ID_CLIENTE"]:
+            dadosCliente["ID_CLIENTE"].append(1)
+        else:
+            dadosCliente["ID_CLIENTE"].append(dadosCliente["ID_CLIENTE"][len(dadosCliente["ID_CLIENTE"])-1] +1 )
+
+        dadosCliente["NOME_CLIENTE"].append(nome)
+        break
+
     os.system('cls')
 
     salvarCsv('Cliente')
     print('CLIENTE CADASTRADO!!')
     sleep(0.5)
+    return menuClientes()
+
+def excluirCliente():
+    if not dadosCliente["ID_CLIENTE"]:
+        print(mensagemFormat('ANTES CADASTRE UM CLIENTE!!!!'))
+        sleep(2.5)
+        return cadastrarCliente()
+    
+    while True:
+        os.system("cls")
+        print(listarClientes())
+        try:
+            idClient = int(input("QUAL CLIENTE VOCE DESEJA EXCLUIR? [ID](digite 0 para voltar):\n"))
+            cancelar(idClient,cadastrarCliente,'int')
+            break
+        except ValueError:
+            print(mensagemFormat("APENAS NUMEROS!!"))
+
+    if idClient not in dadosCliente["ID_CLIENTE"]:
+        print(mensagemFormat("OPÇÃO INVÁLIDA!!"))
+        sleep(1.5)
+    else:   
+        for i in range(len(dadosCliente["ID_CLIENTE"])):
+            if dadosCliente["ID_CLIENTE"][i] == idClient:
+                print(f"CLIENTE '{dadosCliente["NOME_CLIENTE"][i]}' REMOVIDO!!")
+                dadosCliente["ID_CLIENTE"].pop(i)
+                dadosCliente["NOME_CLIENTE"].pop(i)
+                break
+
+    salvarCsv('Cliente')
+    sleep(1.5)
+
     return menuClientes()
     
 def listarClientes(): #defino o parametro igual a zero para ele ser opcional, por que se o usuario nao digitar nada ele esta pre setado com um valor
