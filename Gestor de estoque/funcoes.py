@@ -206,18 +206,41 @@ def cadastrarProduto():
             sleep(2.5)
             return cadastrarCategoria()
         
-        print(listarFornecedores())
-        idFornecedor = int(input('QUAL O ID FORNECEDOR O PRODUTO PERTENCE(digite 0 para voltar): '))
-        cancelar(idFornecedor,menuProdutos,'int')
+        while True:
+            os.system("cls")
+            print(listarFornecedores())
+            try:
+                idFornecedor = int(input('QUAL O ID FORNECEDOR O PRODUTO PERTENCE(digite 0 para voltar): '))
+                cancelar(idFornecedor,menuProdutos,'int')
+                if idFornecedor not in dadosFornecedor["ID_FORNECEDOR"]:
+                    print(mensagemFormat("ID INEXISTENTE!!"))
+                    sleep(1)
+                else:
+                    break
+            except ValueError:
+                print(mensagemFormat("APENAS NÚMEROS!!"))
+                sleep(1)
+
+        
+        while True:
+            os.system("cls")
+            print(listarCategoria())
+            try:
+                idCategoria = int(input('\QUAL O ID DA CATEGORIA O PRODUTO PERTENCE(digite 0 para voltar): '))
+                cancelar(idCategoria,menuProdutos,'int')
+                if idCategoria not in dadosCategoria["ID_CATEGORIA"]:
+                    print(mensagemFormat("ID INEXISTENTE!!"))
+                    sleep(1)
+                else:
+                    break
+            except ValueError:
+                print(mensagemFormat("APENAS NÚMEROS!!"))
+                sleep(1)
 
         for linha in range(len(dadosFornecedor['ID_FORNECEDOR'])):
             if dadosFornecedor['ID_FORNECEDOR'][linha] == idFornecedor:
                 dadosProduto['FORNECEDOR_PRODUTO'].append(dadosFornecedor['NOME_FORNECEDOR'][linha])
                 break
-
-        print(listarCategoria())
-        idCategoria = int(input('\QUAL O ID DA CATEGORIA O PRODUTO PERTENCE(digite 0 para voltar): '))
-        cancelar(idCategoria,menuProdutos,'int')
         
         for linha in range(len(dadosCategoria['ID_CATEGORIA'])):
             if dadosCategoria['ID_CATEGORIA'][linha] == idCategoria:
@@ -967,7 +990,7 @@ def editarCliente():
         return editarCliente()
         
     else:
-        for idDoCliente in dadosCliente["ID_CLIENTE"]:
+        for idDoCliente in range(len(dadosCliente["ID_CLIENTE"])):
             if dadosCliente["ID_CLIENTE"][idDoCliente] == idCliente:
                 nomeEditado = str(input(f'\nRenomear [{dadosCliente["NOME_CLIENTE"][idDoCliente]}] para: ').upper())
                 dadosCliente['NOME_CLIENTE'][idDoCliente] = nomeEditado
