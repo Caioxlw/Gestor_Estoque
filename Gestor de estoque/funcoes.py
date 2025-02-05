@@ -381,8 +381,6 @@ def excluirItem():
         
 def movimentacoesItem():
     os.system('cls')
-    
-    print('═══╣MOVIMENTACAO DE ITEM╠═══')
     if not dadosProduto['ID_PRODUTO']:
         print('ESTOQUE VAZIO!!')
         sleep(1)
