@@ -60,9 +60,9 @@ def listagem(listaId, listaNome):
 def mensagemFormat(mensagem:str):
     tamanhoMsg = len(mensagem)
     retorno = (
-              f'╔═{"═"*tamanhoMsg}═╗\n'
-              f'║ {mensagem} ║\n'           
-              f'╚═{"═"*tamanhoMsg}═╝\n'
+              f'\n\t╔═{"═"*tamanhoMsg}═╗\n'
+              f'\t║ {mensagem} ║\n'           
+              f'\t╚═{"═"*tamanhoMsg}═╝\n\n'
               )
     return retorno
 
@@ -95,7 +95,7 @@ def menuPrincipal():
     
     ╔═════╣MENU PRINCIPAL╠═════╗
     ║    1.MENU PRODUTOS       ║
-    ║    2.MENU CLIENTES       ║
+    ║    2.MENU CLIENTE        ║
     ║    3.MENU FORNECEDORES   ║
     ║    4.MENU CATEGORIA      ║
     ║                          ║
@@ -125,6 +125,7 @@ R:'''))
                     sleep(1)
                     return menuCategoria()
                 case 0:
+                    os.system('cls')
                     print(mensagemFormat('SALVANDO E SAINDO...'))
                     sleep(1.5)
                     exit()
@@ -182,8 +183,11 @@ R:'''))
                     
                     return menuProdutos()
                 case 0:
-                    
+                    os.system('cls')
+                    print(mensagemFormat('VOLTANDO...'))
+                    sleep(1)
                     return menuPrincipal()
+                
                 case _:
                     print(mensagemFormat("OPÇÃO INVÁLIDA!"))   
                     sleep(1)
@@ -207,7 +211,8 @@ def cadastrarProduto():
             return cadastrarCategoria()
         
         print(listarFornecedores())
-        idFornecedor = int(input('QUAL O ID FORNECEDOR O PRODUTO PERTENCE(digite 0 para voltar): '))
+        # print('═╣FORNECEDOR╠═\n')
+        idFornecedor = int(input('QUAL O ID FORNECEDOR O PRODUTO PERTENCE(DIGITE 0 PARA VOLTAR): '))
         cancelar(idFornecedor,menuProdutos,'int')
 
         for linha in range(len(dadosFornecedor['ID_FORNECEDOR'])):
@@ -216,7 +221,8 @@ def cadastrarProduto():
                 break
 
         print(listarCategoria())
-        idCategoria = int(input('\QUAL O ID DA CATEGORIA O PRODUTO PERTENCE(digite 0 para voltar): '))
+        # print('═╣CATEGORIA╠═\n')
+        idCategoria = int(input('QUAL O ID DA CATEGORIA O PRODUTO PERTENCE(DIGITE 0 PARA VOLTAR): '))
         cancelar(idCategoria,menuProdutos,'int')
         
         for linha in range(len(dadosCategoria['ID_CATEGORIA'])):
@@ -226,11 +232,9 @@ def cadastrarProduto():
             
         while True:
             os.system('cls')
-
+            print('═════════╣CADASTRO DE ITEM╠═════════')
             
-            print('═══╣CADASTRO DE ITEM╠═══')
-            
-            nomeProduto = str(input('\nNOME DO PRODUTO(enter para voltar): ')).upper()
+            nomeProduto = str(input('\nNOME DO PRODUTO(ENTER PARA VOLTAR): ')).upper()
             cancelar(nomeProduto,menuProdutos)
             if not nomeProduto:
                 print(f"\n{mensagemFormat('NOME DO PRODUTO NAO PODE ESTAR EM BRANCO!!!')}")
@@ -244,7 +248,7 @@ def cadastrarProduto():
                 precoProduto = float(precoProduto)
                 break
             except ValueError:
-                print(mensagemFormat('Apenas números!!'))
+                print(mensagemFormat('APENAS NÚMEROS!!'))
                 sleep(0.5)
 
         if not dadosProduto['ID_PRODUTO']:
@@ -258,7 +262,7 @@ def cadastrarProduto():
    
         os.system('cls')
         salvarCsv('Produto')
-        print(mensagemFormat('Item cadastrado!!'))
+        print(mensagemFormat('ITEM CADASTRADO!!'))
 
         sleep(1)
         menuProdutos()
@@ -273,17 +277,20 @@ def editarProduto():
     while True:
         os.system('cls')
         print(mostrarEstoque())
-        print('═══╣EDITAR PRODUTO╠═══')
+        print('══════════════════╣EDITAR PRODUTO╠══════════════════')
         
         try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
-            idProduto = int(input('Qual item deseja editar? (ID)(digite 0 para voltar): '))
+            idProduto = int(input('\nQUAL ITEM DESEJA EDITAR? (ID)(DIGITE 0 PARA VOLTAR): '))
             cancelar(idProduto,menuProdutos,'int')
             
         except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
             print('APENAS NUMEROS!!')
+            sleep(1)
+            continue
             
         if idProduto not in dadosProduto['ID_PRODUTO']:
             print('OPÇÃO INVÁLIDA!!')
+            sleep(1)
             continue
         
         break
@@ -328,14 +335,10 @@ def excluirItem():
     while True:
 
         print(mostrarEstoque())
-        
+        print('═════════════════════════╣EXCLUIR PRODUTO╠═════════════════════════')
         try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
-            excluir = (input('\nQual item deseja exlcuir do seu estoque? [ID](enter para voltar):'))
-            cancelar(excluir, menuProdutos)
-            # if excluir == "":
-            #     return menuProdutos()
-            
-            excluir = int(excluir)
+            excluir = int(input('\nQUAL ITEM DESEJA EXLCUIR DO SEU ESTOQUE? [ID](DIGITE 0 PARA VOLTAR):'))
+            cancelar(excluir, menuProdutos,'int')
             if excluir not in dadosProduto['ID_PRODUTO']:
                 print('ESSE ITEM NÃO EXISTE')
                 sleep(1)
@@ -372,6 +375,7 @@ def movimentacoesItem():
 
     while True:
         print(mostrarEstoque())
+        print('═══════════════════════╣MOVIMENTACAO PRODUTO╠═══════════════════════')
         try:
             idProduto = int(input('\nQUAL ITEM DESEJA FAZER UMA MOVIMENTACAO? [ID](DITIGE 0 PARA VOLTAR): '))
             cancelar(idProduto,menuProdutos,'int')
@@ -584,11 +588,13 @@ R:'''))
                     return excluirCategoria() 
                 case 4:
                     print(listarCategoria())
-                    input(f'\n{mensagemFormat("PRESSIONE ENTER PARA SAIR")}')
+                    input(f'{mensagemFormat("PRESSIONE ENTER PARA SAIR")}')
                     
                     return menuCategoria()
                 case 0:
-                    
+                    os.system('cls')
+                    print(mensagemFormat('VOLTANDO...'))
+                    sleep(1)
                     return menuPrincipal()
                 case _:
                     print(mensagemFormat("OPÇÃO INVÁLIDA!"))   
@@ -604,8 +610,8 @@ R:'''))
 def cadastrarCategoria(): 
     while True:
         os.system('cls')
-        print('═══╣CADASTRO DE CATEGORIA╠═══\n') 
-        nomeCateg = input('\nDEFINA O NOME DA CATEGORIA(enter para voltar):').upper()
+        print('═══════════╣CADASTRO DE CATEGORIA╠═══════════') 
+        nomeCateg = input('\nDEFINA O NOME DA CATEGORIA(ENTER PARA VOLTAR):').upper()
         cancelar(nomeCateg,menuCategoria)
         if not dadosCategoria["ID_CATEGORIA"]:
             dadosCategoria["ID_CATEGORIA"].append(1)
@@ -631,7 +637,7 @@ def editarCategoria():
         os.system("cls")
         print(listarCategoria())
         try:
-            idCateg = int(input("QUAL CATEGORIA VOCE DESEJA EDITAR? [ID](digite 0 para voltar):\n"))
+            idCateg = int(input("QUAL CATEGORIA VOCE DESEJA EDITAR? [ID](DIGITE 0 PARA VOLTAR):\n"))
             cancelar(idCateg,cadastrarCategoria,'int')
             if idCateg not in dadosCategoria["ID_CATEGORIA"]:
                 print(mensagemFormat("OPÇÃO INVÁLIDA!!"))
@@ -664,8 +670,8 @@ def excluirCategoria():
         os.system("cls")
         print(listarCategoria())
         try:
-            idCateg = int(input("QUAL CATEGORIA VOCE DESEJA EXCLUIR? [ID](digite 0 para voltar):\n"))
-            cancelar(idCateg,cadastrarCategoria,'int')
+            idCateg = int(input("QUAL CATEGORIA VOCE DESEJA EXCLUIR? [ID](DIGITE 0 PARA VOLTAR):\n"))
+            cancelar(idCateg,menuCategoria,'int')
             break
         except ValueError:
             print(mensagemFormat("APENAS NUMEROS!!"))
@@ -729,6 +735,9 @@ R:'''))
                     
                     return menuFornecedores()
                 case 0:
+                    os.system('cls')
+                    print(mensagemFormat('VOLTANDO...'))
+                    sleep(1)
                     return menuPrincipal()
                 case _:
                     print(mensagemFormat("OPÇÃO INVÁLIDA!")) 
@@ -742,8 +751,8 @@ R:'''))
 
 def cadastrarFornecedor():
     os.system('cls')
-    print('═══╣CADASTRO DE FORNECEDOR╠═══\n')   
-    nome = str(input('NOME DO FORNECEDOR (enter para voltar):\n')).upper()
+    print('═══════╣CADASTRO DE FORNECEDOR╠═══════\n')   
+    nome = str(input('NOME DO FORNECEDOR (ENTER PARA VOLTAR):\n')).upper()
     cancelar(nome,menuFornecedores)
     if not dadosFornecedor["ID_FORNECEDOR"]:
         dadosFornecedor["ID_FORNECEDOR"].append(1)
@@ -768,12 +777,14 @@ def excluirFornecedor():
     while True:
         os.system("cls")
         print(listarFornecedores())
+        print('══════════════════════╣EXCLUIR FORNECEDOR╠══════════════════════')
         try:
-            idForn = int(input("QUAL FORNECEDOR VOCE DESEJA EXCLUIR? [ID](digite 0 para voltar):\n"))
-            cancelar(idForn,cadastrarFornecedor,'int')
+            idForn = int(input("\nQUAL FORNECEDOR VOCE DESEJA EXCLUIR? [ID](DIGITE 0 PARA VOLTAR):"))
+            cancelar(idForn,menuFornecedores,'int')
             break
         except ValueError:
             print(mensagemFormat("APENAS NUMEROS!!"))
+            sleep(1)
 
     if idForn not in dadosFornecedor["ID_FORNECEDOR"]:
         print(mensagemFormat("OPÇÃO INVÁLIDA!!"))
@@ -801,10 +812,10 @@ def editarFornecedor():
 
     os.system('cls')
     print(listarFornecedores())
-    print('═══╣EDITAR FORNECEDOR╠═══')
+    print('════════════════╣EDITAR FORNECEDOR╠════════════════')
     
     try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
-        idFornecedor = int(input('Qual item deseja editar? [ID](digite 0 para voltar): '))
+        idFornecedor = int(input('\nQUAL ITEM DESEJA EDITAR? [ID](DIGITE 0 PARA VOLTAR): '))
         cancelar(idFornecedor,menuFornecedores,'int')
     except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
         print(mensagemFormat('APENAS NUMEROS!!'))
@@ -866,6 +877,9 @@ R:'''))
                     input(mensagemFormat('PRESSIONE ENTER PARA SAIR'))
                     return menuClientes()
                 case 0:
+                    os.system('cls')
+                    print(mensagemFormat('VOLTANDO...'))
+                    sleep(1)
                     return menuPrincipal()
                 case _:
                     print(mensagemFormat("OPÇÃO INVÁLIDA!")) 
@@ -883,7 +897,7 @@ def cadastrarCliente():
     while True:
         os.system('cls')
         print('═══╣CADASTRO DE CLIENTE╠═══\n')   
-        nome = str(input('NOME CLIENTE DO CLIENTE(enter para voltar): ')).upper()
+        nome = str(input('NOME CLIENTE DO CLIENTE(ENTER PARA VOLTAR): ')).upper()
         cancelar(nome,menuClientes)
 
         if not dadosCliente["ID_CLIENTE"]:
@@ -911,7 +925,7 @@ def excluirCliente():
         os.system("cls")
         print(listarClientes())
         try:
-            idClient = int(input("QUAL CLIENTE VOCE DESEJA EXCLUIR? [ID](digite 0 para voltar):\n"))
+            idClient = int(input("QUAL CLIENTE VOCE DESEJA EXCLUIR? [ID](DIGITE 0 PARA VOLTAR):\n"))
             cancelar(idClient,cadastrarCliente,'int')
             break
         except ValueError:
@@ -954,7 +968,7 @@ def editarCliente():
     os.system('cls')
     print(listarClientes())
     try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
-        idCliente = int(input('\nQual item deseja editar? [ID](digite 0 para voltar):'))
+        idCliente = int(input('\nQUAL ITEM DESEJA EDITAR? [ID](DIGITE 0 PARA VOLTAR):'))
         cancelar(idCliente,menuClientes)
 
     except ValueError: #valueerror verifica se o valor colocado esta de acordo com a tipificacao da variavel
@@ -969,7 +983,7 @@ def editarCliente():
     else:
         for idDoCliente in dadosCliente["ID_CLIENTE"]:
             if dadosCliente["ID_CLIENTE"][idDoCliente] == idCliente:
-                nomeEditado = str(input(f'\nRenomear [{dadosCliente["NOME_CLIENTE"][idDoCliente]}] para: ').upper())
+                nomeEditado = str(input(f'\nRENOMEAR [{dadosCliente["NOME_CLIENTE"][idDoCliente]}] PARA: ').upper())
                 dadosCliente['NOME_CLIENTE'][idDoCliente] = nomeEditado
                 sleep(0.5)
                 break
