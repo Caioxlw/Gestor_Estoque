@@ -150,8 +150,7 @@ def menuProdutos():
 
      
         try: #try vai rodar o bloco dentro dele, caso der algum erro o except é chamado
-            menu = int(input('''
-                             
+            menu = int(input(''' 
     ╔═══╣MENU DE PRODUTOS╠═══╗
     ║    1.CADASTRAR         ║
     ║    2.EDITAR            ║
@@ -167,20 +166,16 @@ R:'''))
 
             match menu:
                 case 1:
-                    
                     return cadastrarProduto()
                 case 2:
-                    
                     return editarProduto()
                 case 3:
-                    
                     return excluirItem() 
                 case 4:
                     return movimentacoesItem()
                 case 5:
                     print(mostrarEstoque())
                     input(f'\n{mensagemFormat("PRESSIONE ENTER PARA SAIR")}')
-                    
                     return menuProdutos()
                 case 0:
                     os.system('cls')
@@ -214,7 +209,7 @@ def cadastrarProduto():
             os.system("cls")
             print(listarFornecedores())
             try:
-                idFornecedor = int(input('QUAL O ID FORNECEDOR O PRODUTO PERTENCE(digite 0 para voltar): '))
+                idFornecedor = int(input('QUAL O ID FORNECEDOR O PRODUTO PERTENCE(DIGITE 0 PARA VOLTAR): '))
                 cancelar(idFornecedor,menuProdutos,'int')
                 if idFornecedor not in dadosFornecedor["ID_FORNECEDOR"]:
                     print(mensagemFormat("ID INEXISTENTE!!"))
@@ -224,12 +219,12 @@ def cadastrarProduto():
             except ValueError:
                 print(mensagemFormat("APENAS NÚMEROS!!"))
                 sleep(1)
-                
+
         while True:
             os.system("cls")
             print(listarCategoria())
             try:
-                idCategoria = int(input('QUAL O ID DA CATEGORIA O PRODUTO PERTENCE(digite 0 para voltar): '))
+                idCategoria = int(input('QUAL O ID DA CATEGORIA O PRODUTO PERTENCE(DIGITE 0 PARA VOLTAR): '))
                 cancelar(idCategoria,menuProdutos,'int')
                 if idCategoria not in dadosCategoria["ID_CATEGORIA"]:
                     print(mensagemFormat("ID INEXISTENTE!!"))
@@ -799,7 +794,7 @@ def excluirFornecedor():
         print(listarFornecedores())
         print('══════════════════════╣EXCLUIR FORNECEDOR╠══════════════════════')
         try:
-            idForn = int(input("QUAL FORNECEDOR VOCE DESEJA EXCLUIR? [ID](digite 0 para voltar):\n"))
+            idForn = int(input("QUAL FORNECEDOR VOCE DESEJA EXCLUIR? [ID](DIGITE 0 PARA VOLTAR):\n"))
             cancelar(idForn,menuFornecedores,'int')
             idForn = int(input("\nQUAL FORNECEDOR VOCE DESEJA EXCLUIR? [ID](DIGITE 0 PARA VOLTAR):"))
             cancelar(idForn,menuFornecedores,'int')
