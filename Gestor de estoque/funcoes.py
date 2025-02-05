@@ -711,7 +711,7 @@ def menuFornecedores():
     ║   3.EXCLUIR FORNECEDOR    ║
     ║   4.LISTAR FORNECEDOR     ║
     ║                           ║
-    ║  0.SALVAR E SALVAR        ║             
+    ║  0.SALVAR E SAIR          ║             
     ╚═══════════════════════════╝              
 R:'''))
 
@@ -770,7 +770,7 @@ def excluirFornecedor():
         print(listarFornecedores())
         try:
             idForn = int(input("QUAL FORNECEDOR VOCE DESEJA EXCLUIR? [ID](digite 0 para voltar):\n"))
-            cancelar(idForn,cadastrarFornecedor,'int')
+            cancelar(idForn,menuFornecedores,'int')
             break
         except ValueError:
             print(mensagemFormat("APENAS NUMEROS!!"))
