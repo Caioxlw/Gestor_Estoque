@@ -70,4 +70,4 @@ with open("./banco_de_dados/categorias.csv", "w", encoding="utf-8") as f:
     for i in range(len(CATEGORIAS)):
         f.write(f"{i},{random.choice(CATEGORIAS)}\n")
 
-print("Arquivos 'clientes.csv', 'fornecedores.csv', 'categorias.csv' e 'produtos.csv' preenchidos com sucesso!")
+print("Arquivos :\n'clientes.csv'\n'fornecedores.csv'\n'categorias.csv'\n'produtos.csv'\npreenchidos com sucesso!")

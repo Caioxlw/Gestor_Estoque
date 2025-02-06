@@ -332,7 +332,8 @@ R:'''))
         case 2:
             for idDoProduto in range(len(dadosProduto["ID_PRODUTO"])):                          
                 if dadosProduto["ID_PRODUTO"][idDoProduto] == idProduto:
-                    precoEditado = float(input(f'Trocar preço atual ({dadosProduto["PRECO_PRODUTO"][idDoProduto]}) para: ')) 
+                    precoEditado = (input(f'Trocar preço atual ({dadosProduto["PRECO_PRODUTO"][idDoProduto]}) para: ')).replace(',','.')
+                    precoEditado = float(precoEditado)
                     dadosProduto["PRECO_PRODUTO"][idDoProduto] = precoEditado
                     break
             print("PREÇO EDITADO COM SUCESSO!!!")
