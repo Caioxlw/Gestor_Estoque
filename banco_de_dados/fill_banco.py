@@ -1,3 +1,6 @@
+# ESTE ARQUIVO É SOMENTE PARA PREENCHER
+# O BANCO DE DADOS PARA TESTES
+
 import random
 
 produtos = [
